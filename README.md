@@ -30,6 +30,16 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 - Level 8: 构造函数和析构函数以及GC机制
 - Level 9: 构造函数的后门
 
+# 2024/07/07 更新
+- Level 10: __wakeup()
+- Level 11: __wakeup() CVE-2016-7124
+- Level 12: __sleep()
+- Level 13: __toString()
+- Level 14: __invoke()
+- Level 15: POP链前置
+- Level 16: POP链构造
+- Level 17: 字符串逃逸基础-无中生有
+
 # WriteUP
 
 ## Level 0
