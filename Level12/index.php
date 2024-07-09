@@ -20,7 +20,7 @@ serialize() 函数会检查类中是否存在一个魔术方法 __sleep()。如�
 # @link:   hello-ctf.com
 
 */
-include 'flag.php';
+
 
 class FLAG {
 
@@ -69,5 +69,7 @@ echo serialize($FLAG);
 echo "<br>------ 每次请求会随机返回两个属性，你也可以用 chance 来指定你想要的属性 ------<br>";
 
 echo serialize(new CHALLENGE());
+
+// HelloCTF{Th3___sleep_function__is_called_before_serialization_t0_clean_up_4nd_select_variab1es}
 
 

@@ -29,7 +29,8 @@ class A {
 class B {
     public $b;
     public function __toString() {
-        return ($this->b)();
+        $f = $this->b;
+        return $f();
     }
 }
 

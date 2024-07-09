@@ -1,7 +1,7 @@
 <?php
 
 /*
---- HelloCTF - 反序列化靶场 关卡 10 : sleep! --- 
+--- HelloCTF - 反序列化靶场 关卡 12 : sleep! --- 
 
 年轻就是好啊，倒头就睡。
 
@@ -20,7 +20,6 @@ serialize() 函数会检查类中是否存在一个魔术方法 __sleep()。如�
 # @link:   hello-ctf.com
 
 */
-include 'flag.php';
 
 class FLAG {
 
@@ -38,10 +37,9 @@ class FLAG {
 class CHALLENGE extends FLAG {
 
     public $h,$e,$l,$I,$o,$c,$t,$f;
-    public $chance;
 
     function chance() {
-            return $_GET['chance'];
+        return $_GET['chance'];
     }
     public function __sleep() {
         /* FLAG is $h + $e + $l + $I + $o + $c + $t + $f + $f + $l + $a + $g */

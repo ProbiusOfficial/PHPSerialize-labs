@@ -19,27 +19,30 @@ error_reporting(0);
 
 include 'flag.php';
 
-class FLAG{
-    function __wakeup() {
+class FLAG {
+    public $flag = "FAKEFLAG";
+
+    public function  __wakeup(){
         global $flag;
         $flag = NULL;
     }
-    function get_flag(){
+    public function __destruct(){
         global $flag;
-        echo $flag;
+        if ($flag !== NULL) {
+            echo $flag;
+        }else
+        {
+            echo "sorry,flag is gone!";
+        }
     }
 }
 
 if(isset($_POST['o']))
 {
-    if(o=="phpinfo")
-    {
-        phpinfo();
-    }else{
-        unserialize($_POST['o'])->get_flag();
-    }
+    unserialize($_POST['o']);
 }else {
     highlight_file(__FILE__);
+    phpinfo();
 }
 
 ?>
