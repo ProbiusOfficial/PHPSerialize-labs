@@ -14,7 +14,7 @@
 
 */
 
-highlight_file('source');
+highlight_file(__FILE__);
 
 class Demo {
     public $a = "Hello";
@@ -27,9 +27,6 @@ class FLAG {
 }
 
 $serliseStringDemo = serialize(new Demo());
-echo "SerliseStringDemo:'".$serliseStringDemo."'<br>";
-
-echo "Change SOMETHING TO GET FLAG";
 
 $target = $_GET['target'];
 $change = $_GET['change'];
@@ -39,9 +36,5 @@ $serliseStringFLAG = str_replace($target, $change, $serliseStringDemo);
 $FLAG = unserialize($serliseStringFLAG);
 
 if ($FLAG instanceof FLAG && $FLAG->key == 'GET_FLAG') {
-    include 'flag.php';
     echo $flag;
-} else {
-    echo "Your serliaze string is ".$serliseStringFLAG . "<br> And Here is ";
-    var_dump($FLAG);
 }
