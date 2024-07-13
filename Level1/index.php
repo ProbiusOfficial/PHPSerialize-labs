@@ -27,7 +27,7 @@ $code = $_POST['code'];
 
 if(isset($code)){
 
-    if (!strpos($code, "new")) {
+    if (stripos($code, "new") === false) {
         echo "Not This level!";
     } else {
        eval($code);
