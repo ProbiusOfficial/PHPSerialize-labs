@@ -16,6 +16,7 @@ __toString() 方法用于一个类被当成字符串时应怎样回应。例如 
 
 class FLAG {
     function __toString() {
+        echo "I'm a string ~~~";
         include 'flag.php';
         return $flag;
     }
