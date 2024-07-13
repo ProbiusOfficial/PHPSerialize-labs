@@ -13,7 +13,7 @@ HINT：各有千秋~
 
 */
 
-class a_object{
+class a_class{
     public $a_value = "HelloCTF";
 }
 $a_array = array(a=>"Hello",b=>"CTF");
@@ -25,7 +25,7 @@ $a_null = null;
 highlight_file('demo');
 
 echo "<br>See How to serialize:<br>";
-echo "a_object: ".serialize(new a_object())."<br>";
+echo "a_object: ".serialize(new a_class())."<br>";
 echo "a_array: ".serialize($a_array)."<br>";
 echo "a_string: ".serialize($a_string)."<br>";
 echo "a_number: ".serialize($a_number)."<br>";

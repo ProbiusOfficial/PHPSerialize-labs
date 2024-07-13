@@ -14,9 +14,10 @@ HINT：各有千秋~
 
 */
 
-class a_object{
+class a_class{
     public $a_value = "HelloCTF";
 }
+$a_object = new a_class();
 $a_array = array(a=>"Hello",b=>"CTF");
 $a_string = "HelloCTF";
 $a_number = 678470;

@@ -17,6 +17,16 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 - [PHP 手册](https://www.php.net/manual/zh/)
     > PHP官方手册，遇事不决，看看说明书x
 
+# 部署
+
+## 使用 `docker-compose` 部署
+
+```bash
+git clone --depth 1 https://github.com/ProbiusOfficial/PHPSerialize-labs.git
+cd PHPSerialize-labs
+sudo docker-compose up -d   # 访问 http://localhost:8080/
+```
+
 # 2024/07/04 更新
 - Level 1: 类的实例化
 - Level 2: 对象中值的传递

@@ -31,7 +31,7 @@ class FLAG {
     public $x,$y,$z;
 
     public function __sleep() {
-        echo "If you serilize FLAG, you will just get x,y,z<br>";
+        echo "If you serialize FLAG, you will just get x,y,z<br>";
         return ['x','y','z'];
     }
 }
