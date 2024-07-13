@@ -35,6 +35,7 @@
         <a class="level-link" href="Level15/index.php">Level 15: POP链前置</a>
         <a class="level-link" href="Level16/index.php">Level 16: POP链构造</a>
         <a class="level-link" href="Level17/index.php">Level 17: 字符串逃逸基础-无中生有</a>
+        <a class="level-link" href="Level18/index.php">Level 18: 字符串逃逸基础-尾部判定</a>
     </div>
     <div class="footer">
         <p>© 2024 Probius | <a href="https://github.com/ProbiusOfficial/PHPSerialize-labs">GitHub</a></p>
