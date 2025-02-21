@@ -140,11 +140,11 @@ $a_string = "HelloCTF"; /*<=等价于=>*/ $a_string = unserialize('s:8:"HelloCTF
 ```PHP
 <?php 
 
-class a_object{
+class a_class{
     public $a_value = "HelloCTF";
 }
 
-$your_object = new a_object();
+$your_object = new a_class();
 $your_boolean = true;
 $your_NULL = null;
 $your_string = "IWANT";
@@ -593,6 +593,10 @@ if ($FLAG instanceof FLAG && $FLAG->key == 'GET_FLAG') {
 可以看到本题要求我们做一些替换工作让 `key` 值为 `GET_FLAG` ，而在前面的对象创建过程中，我们知道 key 值为 `GET_FLAG";}FAKE_FLAG`，根据我们所知的特性，将 key 值对应的字符数量缩窄只留下 `GET_FLAG`，也就是 8 个字符 —— 将 20 替换为 8即可，接着 题目要求一个新的 FLAG 类，所以还需要将类名标识由 Demo 改为 FLAG。
 
 ```PHP
-$target = ['Demo',20]
-$change = ['FLAG',8]
+$target = array('Demo', 20);
+$change = array('FLAG', 8);
+```
+构造的exp：
+```bash
+../index.php?target[]=Demo&target[]=20&change[]=FLAG&change[]=8
 ```
