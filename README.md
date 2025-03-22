@@ -19,13 +19,20 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 
 # 部署
 
-## 使用 `docker-compose` 部署
+## 本地部署
+
+### 使用 `docker-compose` 部署
 
 ```bash
 git clone --depth 1 https://github.com/ProbiusOfficial/PHPSerialize-labs.git
 cd PHPSerialize-labs
 sudo docker-compose up -d   # 访问 http://localhost:8080/
 ```
+
+## 合作平台
+题目已上线 [【NSSCTF平台】](https://www.nssctf.cn/problem) 可在来源中选择 **HelloCTF** 或直接搜索 **RCE-labs**：
+
+![QQ_1742633138562](https://github.com/user-attachments/assets/1f10cb12-dc94-4354-b391-182c002ed62a)
 
 # 2024/07/04 更新
 - Level 1: 类的实例化
