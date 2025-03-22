@@ -28,11 +28,11 @@ git clone --depth 1 https://github.com/ProbiusOfficial/PHPSerialize-labs.git
 cd PHPSerialize-labs
 sudo docker-compose up -d   # 访问 http://localhost:8080/
 ```
-
 ## 合作平台
-题目已上线 [【NSSCTF平台】](https://www.nssctf.cn/problem) 可在来源中选择 **HelloCTF** 或直接搜索 **RCE-labs**：
+题目已上线 [【NSSCTF平台】](https://www.nssctf.cn/problem) 可在来源中选择 **HelloCTF** 或直接搜索 **反序列化靶场**：
 
-![QQ_1742633138562](https://github.com/user-attachments/assets/1f10cb12-dc94-4354-b391-182c002ed62a)
+![QQ_1742634141565](https://github.com/user-attachments/assets/57d425b7-e96d-4063-99c0-8bd8b2bbf48a)
+
 
 # 2024/07/04 更新
 - Level 1: 类的实例化
