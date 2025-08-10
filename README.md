@@ -59,6 +59,12 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 
 ### 本地部署
 
+### `docker` 部署
+
+```bash
+docker run -p 8080:80 -d  ghcr.io/ProbiusOfficial/phpserialize-labs
+```
+
 ### 使用 `docker-compose` 部署
 
 ```bash
@@ -66,17 +72,12 @@ git clone --depth 1 https://github.com/ProbiusOfficial/PHPSerialize-labs.git
 cd PHPSerialize-labs
 sudo docker-compose up -d   # 访问 http://localhost:8080/
 ```
+
 ### 合作平台
 
 题目已上线 [【NSSCTF平台】](https://www.nssctf.cn/problem) 可在来源中选择 **HelloCTF** 或直接搜索 **反序列化靶场**：
 
-
-
-
-
 # WriteUP
-
-
 
 ## Level 1
 
@@ -115,7 +116,7 @@ code=`$target->$free_flag=$flag_string;`
 - `protected $protected_flag` 可以通过 `get_protected_flag()` / `get_private_flag()` 访问，因为受保护的变量是可以被继承的。
 - `private $private_flag`则只能通过 `get_private_flag()` 进行访问，因为私有变量不能被继承。
 
-而对象中函数的调用和值的访问类似，也通过 `->` 符号实现：`$对象名 -> 函数名();` 
+而对象中函数的调用和值的访问类似，也通过 `->` 符号实现：`$对象名 -> 函数名();`
 
 **POST提交：**
 
@@ -347,7 +348,7 @@ class FLAG {
 }
 ```
 
-我们先使用语句` echo serialize(new FLAG());` 将其对应的序列化字符串输出出来，得到：
+我们先使用语句`echo serialize(new FLAG());` 将其对应的序列化字符串输出出来，得到：
 
 ```PHP
 O:4:"FLAG":1:{s:4:"flag";s:8:"FAKEFLAG";}
@@ -373,7 +374,7 @@ serialize() 函数会检查类中是否存在一个魔术方法 __sleep()。如�
 
 - **必要的返回内容**：该方法必须返回一个数组: return array('属性1', '属性2', '属性3') / return ['属性1', '属性2', '属性3']，数组中的属性名将决定哪些变量将被序列化，当属性被 static 修饰时，无论有无都无法序列化该属性。
 - **私有属性命名**：如果需要返回父类中的私有属性，需要使用序列化中的特殊格式 - `%00父类名称%00变量名` (%00 是 ASCII 值为 0 的空字符 null,在代码内我们也可以通过 "\0" - 注意在双引号中，PHP 才会解析转义字符和变量。)。
-  - 例如，父类 FLAG 的私有属性 `private $f`; 应该在子类的` __sleep()` 方法中以 "`\0FLAG\0f`" 的格式返回。
+  - 例如，父类 FLAG 的私有属性 `private $f`; 应该在子类的`__sleep()` 方法中以 "`\0FLAG\0f`" 的格式返回。
 - **未返回任何内容**：如果 `__sleep()` 方法未返回任何内容或返回非数组类型，会触发 E_NOTICE 级别的错误，并且对象会被序列化为 `null` 空值。
 
 该题目是一个 演示 + 实践 的组合题目（通俗点就是缝合怪（bushi
@@ -507,7 +508,7 @@ unserialize(serialize($d));
 - `__invoke()` 方法用于一个对象被当成函数时应该如何回应。例如 $obj() 应该显示些什么。
 - `__toString()` 方法用于一个类被当成字符串时应怎样回应。例如 echo $obj; 应该显示些什么。
 
-同样的我们先找终点 —— 
+同样的我们先找终点 ——
 
 ```PHP
 class A {
@@ -575,7 +576,7 @@ echo urlencode(serialize($init));
 
 为什么说共同决定，当序列化字符串中没有对应类的一些成员属性的时候，在反序列化时，解释器会直接从当前类中 COPY 序列化中不存在的成员属性。
 
-这个题目最终需要构建一还原后属于A类的序列化字符串，其中需要存在一个变量` helloctfcmd` 的值为 `get_flag`，本地构建一个符合要求的A类直接输出序列化字符串即可：
+这个题目最终需要构建一还原后属于A类的序列化字符串，其中需要存在一个变量`helloctfcmd` 的值为 `get_flag`，本地构建一个符合要求的A类直接输出序列化字符串即可：
 
 ```PHP
 class A {
@@ -612,7 +613,9 @@ if ($FLAG instanceof FLAG && $FLAG->key == 'GET_FLAG') {
 $target = array('Demo', 20);
 $change = array('FLAG', 8);
 ```
+
 构造的exp：
+
 ```bash
 ../index.php?target[]=Demo&target[]=20&change[]=FLAG&change[]=8
 ```
@@ -635,9 +638,8 @@ $change = array('FLAG', 8);
 
 - [php-SER-labs-docker](https://github.com/ProbiusOfficial/php-SER-labs-docker)
 
-  > 基于fine-1(这周末在做梦)师傅的靶场（https://github.com/fine-1/php-SER-libs）添加的容器版本，，在README中附带有WriteUp
+  > 基于fine-1(这周末在做梦)师傅的靶场（<https://github.com/fine-1/php-SER-libs）添加的容器版本，，在README中附带有WriteUp>
 
 - [PHP 手册](https://www.php.net/manual/zh/)
 
   > PHP官方手册，遇事不决，看看说明书x
-
