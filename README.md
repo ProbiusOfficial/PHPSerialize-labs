@@ -59,10 +59,10 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 
 ### 本地部署
 
-### `docker` 部署
+### 使用 `docker` 部署
 
 ```bash
-docker run -p 8080:80 -d  ghcr.io/ProbiusOfficial/phpserialize-labs
+docker run -p 8080:80 -d ghcr.io/probiusofficial/phpserialize-labs  # 访问 http://localhost:8080/
 ```
 
 ### 使用 `docker-compose` 部署
