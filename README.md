@@ -59,19 +59,37 @@ PHPSerialize-labs是一个使用php语言编写的，用于学习CTF中PHP反序
 
 ### 本地部署
 
-### `docker` 部署
+1. 下载并安装 [PHPStudy](https://www.xp.cn/phpstudy#phpstudy)
+2. 将网站根目录设置为 `PHPSerialize-labs` 目录
+3. 启动 Apache 服务
+4. 在浏览器中访问 <http://localhost/>
+
+### Docker 部署
+
+使用以下命令快速启动：
 
 ```bash
-docker run -p 8080:80 -d  ghcr.io/ProbiusOfficial/phpserialize-labs
+docker run -p 8080:80 -d ghcr.io/probiusofficial/phpserialize-labs
 ```
 
-### 使用 `docker-compose` 部署
+启动后访问：<http://localhost:8080/>
+
+### Docker Compose 部署
+
+1. 克隆项目到本地：
 
 ```bash
 git clone --depth 1 https://github.com/ProbiusOfficial/PHPSerialize-labs.git
-cd PHPSerialize-labs
-sudo docker-compose up -d   # 访问 http://localhost:8080/
 ```
+
+2. 启动服务：
+
+```bash
+cd PHPSerialize-labs
+docker-compose up -d
+```
+
+启动后访问：<http://localhost:8080/>
 
 ### 合作平台
 
