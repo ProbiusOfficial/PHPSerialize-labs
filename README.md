@@ -119,7 +119,7 @@ code=`$o=new FLAG();`
 
 **POST提交：**
 
-code=`$target->$free_flag=$flag_string;`
+code=`$target->free_flag=$flag_string;`
 
 ## Level 3
 
