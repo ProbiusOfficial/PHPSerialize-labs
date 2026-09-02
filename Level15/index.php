@@ -1,20 +1,12 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 15 : POP链初步 --- 
-
-世界的本质其实就是套娃（x
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬(@ProbiusOfficial)
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 15 : POP 链前置 ---
+FLAG in flag.php
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
 
-/* FLAG in flag.php */
+$LEVEL_NO = 15;
+require __DIR__ . '/../template/_header.php';
 
 class A {
     public $a;
@@ -57,6 +49,6 @@ class destnation {
 
 if(isset($_POST['o'])) {
     unserialize($_POST['o']);
-} else {
-    highlight_file(__FILE__);
 }
+
+require __DIR__ . '/../template/_footer.php';

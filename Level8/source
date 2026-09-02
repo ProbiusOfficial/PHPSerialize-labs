@@ -1,4 +1,8 @@
 <?php
+/*
+--- HelloCTF - 反序列化靶场 关卡 8 : 构造函数和析构函数以及GC机制 ---
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
+*/
 
 class RELFLAG {
 
@@ -20,7 +24,7 @@ class RELFLAG {
 function check(){
     global $flag;
     if($flag > 5){
-        echo "HelloCTF{???}";
+        echo "helloctf{????}";
     }else{
         echo "Check Detected flag is ". $flag;
     }

@@ -1,18 +1,12 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 17 : 字符串逃逸基础 --- 
-
-序列化和反序列化的规则特性_无中生有：当成员属性的实际数量符合序列化字符串中对应属性值时，似乎不会做任何检查？
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬(@ProbiusOfficial)
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 17 : 字符串逃逸基础·无中生有 ---
+规则特性:当成员属性的实际数量符合序列化字符串中对应属性值时,不会做额外检查
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
+
+$LEVEL_NO = 17;
+require __DIR__ . '/../template/_header.php';
 
 class A {
 
@@ -41,6 +35,6 @@ if(isset($_POST['o'])) {
     } else {
         echo "what's rule?";
     }
-} else {
-    highlight_file(__FILE__);
 }
+
+require __DIR__ . '/../template/_footer.php';

@@ -1,20 +1,12 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 18 : 字符串逃逸基础 --- 
-
-序列化和反序列化的规则特性,字符串尾部判定：进行反序列化时，当成员属性的数量，名称长度，内容长度均一致时，程序会以 ";}" 作为字符串的结尾判定。
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬(@ProbiusOfficial)
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 18 : 字符串逃逸基础·尾部判定 ---
+规则特性:当成员属性的数量、名称长度、内容长度均一致时,程序以 ";}" 作为字符串结尾判定
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
 
-highlight_file('source');
+$LEVEL_NO = 18;
+require __DIR__ . '/../template/_header.php';
 
 class Demo {
     public $a = "Hello";
@@ -45,3 +37,5 @@ if ($FLAG instanceof FLAG && $FLAG->key == 'GET_FLAG') {
     echo "Your serliaze string is ".$serliseStringFLAG . "<br> And Here is ";
     var_dump($FLAG);
 }
+
+require __DIR__ . '/../template/_footer.php';

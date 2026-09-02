@@ -1,26 +1,14 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 12 : sleep! --- 
-
-年轻就是好啊，倒头就睡。
-
-serialize() 函数会检查类中是否存在一个魔术方法 __sleep()。如果存在，该方法会先被调用，然后才执行序列化操作。
-该方法必须返回一个数组: return array('属性1', '属性2', '属性3') / return ['属性1', '属性2', '属性3']。
-数组中的属性名将决定哪些变量将被序列化，当属性被 static 修饰时，无论有无都无法序列化该属性。
-如果需要返回父类中的私有属性，需要使用序列化中的特殊格式 - %00父类名称%00变量名 (%00 是 ASCII 值为 0 的空字符 null,在代码内我们也可以通过 "\0" - 注意在双引号中，PHP 才会解析转义字符和变量。)。
-例如，父类 FLAG 的私有属性 private $f; 应该在子类的 __sleep() 方法中以 "\0FLAG\0f" 的格式返回。
-如果该方法未返回任何内容，序列化会被制空，并产生一个 E_NOTICE 级别的错误。
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬(@ProbiusOfficial)
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 12 : __sleep() ---
+serialize() 会检查类中是否存在 __sleep(),存在则先调用再执行序列化。
+__sleep() 必须返回数组,数组元素决定哪些属性将被序列化;
+返回父类私有属性需使用 "\0类名\0属性名" 格式;未返回内容则序列化为 NULL 并产生 E_NOTICE。
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
 
+$LEVEL_NO = 12;
+require __DIR__ . '/../template/_header.php';
 
 class FLAG {
 
@@ -38,7 +26,7 @@ class FLAG {
 
 class CHALLENGE extends FLAG {
 
-    public $h = 'HelloCTF{',$e = 'Th3_',$l = '__sleep_function_',$I = '_is_',$o = 'called_',$c = 'before_',$t = 'serialization_',$f = 't0_';
+    public $h = 'helloctf{',$e = 'Th3_',$l = '__sleep_function_',$I = '_is_',$o = 'called_',$c = 'before_',$t = 'serialization_',$f = 't0_';
     public $chance;
 
     function chance() {
@@ -61,8 +49,6 @@ class CHALLENGE extends FLAG {
 
 /* FLAG is $h + $e + $l + $I + $o + $c + $t + $f + $f + $l + $a + $g */
 
-highlight_file('source');
-
 $FLAG = new FLAG();
 echo serialize($FLAG);
 
@@ -70,6 +56,4 @@ echo "<br>------ 每次请求会随机返回两个属性，你也可以用 chanc
 
 echo serialize(new CHALLENGE());
 
-
-
-
+require __DIR__ . '/../template/_footer.php';

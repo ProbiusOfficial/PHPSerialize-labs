@@ -1,18 +1,11 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 4 : 序列化 --- 
-
-HINT：嗯，全是私有，怎么获取flag呢？试试序列化！
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 4 : 序列化初体验 ---
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
+
+$LEVEL_NO = 4;
+require __DIR__ . '/../template/_header.php';
 
 class FLAG3{
     private $flag3_object_array = array("se3","me");
@@ -34,9 +27,6 @@ $code = $_POST['code'];
 
 if(isset($code)){
     eval($code);
-} else {
-    highlight_file(source);
 }
 
-
-
+require __DIR__ . '/../template/_footer.php';

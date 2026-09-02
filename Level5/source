@@ -1,4 +1,8 @@
 <?php
+/*
+--- HelloCTF - 反序列化靶场 关卡 5 : 序列化的普通值规则 ---
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
+*/
 
 $your_object = unserialize($_POST['o']);
 $your_array = unserialize($_POST['a']);
@@ -8,7 +12,7 @@ $your_boolean = unserialize($_POST['b']);
 $your_NULL = unserialize($_POST['n']);
 
 if(
-    $your_boolean && 
+    $your_boolean &&
     $your_NULL == null &&
     $your_string == "IWANT" &&
     $your_number == 1 &&
@@ -20,5 +24,3 @@ if(
 else{
     echo "You really know how to serialize?";
 }
-
-

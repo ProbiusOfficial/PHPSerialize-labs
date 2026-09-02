@@ -1,17 +1,7 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 4 : 序列化 --- 
-
-HINT：嗯！？全是私有，怎么获取flag呢？试试序列化！
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 4 : 序列化初体验 ---
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
 
 class FLAG3{
@@ -30,11 +20,8 @@ class FLAG{
 
 $flag_is_here = new FLAG();
 
-
 $code = $_POST['code'];
 
 if(isset($code)){
     eval($code);
-} else {
-    highlight_file(__FILE__);
 }

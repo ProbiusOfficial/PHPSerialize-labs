@@ -1,18 +1,11 @@
 <?php
-
 /*
---- HelloCTF - 反序列化靶场 关卡 8 : 构造函数和析构函数以及GC机制 --- 
-
-HINT：注意顺序和次数
-
-# -*- coding: utf-8 -*-
-# @Author: 探姬(@ProbiusOfficial)
-# @Date:   2024-07-01 20:30
-# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
-# @email:  admin@hello-ctf.com
-# @link:   hello-ctf.com
-
+--- HelloCTF - 反序列化靶场 关卡 8 : 构造函数和析构函数以及GC机制 ---
+© ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
+
+$LEVEL_NO = 8;
+require __DIR__ . '/../template/_header.php';
 
 global $destruct_flag;
 global $construct_flag;
@@ -33,7 +26,6 @@ class FLAG {
         echo "Destructor called " . $destruct_flag . "<br>";
     }
 }
-highlight_file(demo);
 
 echo "<br>Object created:";
 $demo = new FLAG();
@@ -42,7 +34,7 @@ echo "Object serialized: But Nothing Happen(:<br>";
 $s = serialize($demo);
 
 echo "Object unserialized:But nothing happened either):<br>";
-$n = unserialize($s); 
+$n = unserialize($s);
 echo "serialized Object destroyed:";
 unset($n);
 echo "original Object destroyed:";
@@ -54,10 +46,7 @@ unset($demo);
 echo "<br>This object ('new FLAG();') will be destroyed immediately because it is not assigned to any variable:";
 new FLAG();
 
-
 echo "<br>Now Your Turn!, Try to get the flag!<br>";
-
-highlight_file(source);
 
 class RELFLAG {
 
@@ -79,7 +68,7 @@ class RELFLAG {
 function check(){
     global $flag;
     if($flag > 5){
-        echo "FLAG{Construct0r_&_D3struct0r}";
+        echo "helloctf{Construct0r_&_D3struct0r}";
     }else{
         echo "Check Detected flag is ". $flag;
     }
@@ -90,3 +79,4 @@ if (isset($_POST['code'])) {
     check();
 }
 
+require __DIR__ . '/../template/_footer.php';
