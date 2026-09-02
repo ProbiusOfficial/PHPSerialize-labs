@@ -30,8 +30,14 @@ if ($M && isset($M['sources'])) {
     }
 }
 
+/* Code Runner 路径(页面所在目录的上一级) */
+$LAB_DIRNAME = str_replace('\\', '/', dirname(isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '/'));
+$LAB_RUNNER = ($LAB_DIRNAME === '' || $LAB_DIRNAME === '/' || $LAB_DIRNAME === '.') ? '/runner.php' : $LAB_DIRNAME . '/../runner.php';
+
 $LAB_PAYLOAD = array(
     'page' => 'level',
+    'runner' => $LAB_RUNNER,
+    'wpExp' => ($M && isset($M['wp']['exp'])) ? $M['wp']['exp'] : '',
     'no' => $LEVEL_NO,
     'total' => $LAB_TOTAL,
     'activeTab' => $LAB_ACTIVE,
@@ -40,8 +46,9 @@ $LAB_PAYLOAD = array(
     'sources' => $LAB_SOURCES_JS,
 );
 ?>
-      <?php echo $LAB_DEMO; /* 关卡运行输出 */ ?>
-      </div>
+<?php if (trim($LAB_DEMO) !== '') { ?>
+      <iframe class="lab-out-frame" srcdoc="<?php echo htmlspecialchars($LAB_DEMO, ENT_QUOTES); ?>"></iframe>
+<?php } else { echo ' '; } ?>
     </div>
 
     <div class="panel" data-panel="src" <?php echo $LAB_ACTIVE === 'src' ? '' : 'hidden'; ?>>
@@ -120,7 +127,8 @@ $LAB_PAYLOAD = array(
       <div class="wp" hidden>
         <h4>思路</h4>
         <p><?php echo $M['wp']['idea']; ?></p>
-        <?php if ($M['wp']['exp']) { ?><h4>EXP</h4><pre><?php echo htmlspecialchars($M['wp']['exp']); ?></pre><?php } ?>
+        <?php if ($M['wp']['exp']) { ?><h4>EXP(exp.php 参考代码)</h4><pre><?php echo htmlspecialchars($M['wp']['exp']); ?></pre>
+        <button class="btn ghost" data-wp-load="1" style="margin-top:8px">⌨ 一键载入运行器</button><?php } ?>
         <a class="more" href="../writeups/Level<?php echo $LEVEL_NO; ?>.md" target="_blank">查看完整 WriteUP ↗</a>
       </div>
       <?php } ?>

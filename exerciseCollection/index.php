@@ -21,9 +21,10 @@ $EXERCISES = [
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">探姬 · HelloCTF</a>
+    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">HelloCTF</a>
     <span class="crumb">进阶练习 · 真题实战</span>
     <span class="sp"></span>
+    <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>
     <a class="iconbtn" href="../index.php">目录</a>
     <button class="iconbtn" id="themeBtn" title="切换明暗">◐</button>
   </div>
@@ -54,7 +55,7 @@ $EXERCISES = [
 </div>
 
 <script>
-var LAB_PAGE = {page:"home", total:1};
+var LAB_PAGE = {page:"home", total:1, runner:"../runner.php"};
 </script>
 <script src="../assets/js/lab.js"></script>
 </body>

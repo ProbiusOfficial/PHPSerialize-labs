@@ -177,12 +177,11 @@ textarea:focus{outline:2px solid var(--accent-weak);border-color:var(--accent)}
 .runner header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
 .runner header b{font-size:15px}
 .runner header .sp{flex:1}
-.runner .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px 18px}
-@media (max-width:760px){.runner .grid{grid-template-columns:1fr}}
-.runner label{font-size:12.5px;color:var(--ink-2);display:block;margin:0 0 6px}
-.runner textarea{min-height:200px}
-.runner .out{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
-  font:12.5px/1.7 var(--mono);color:var(--ink);min-height:60px;word-break:break-all;white-space:pre-wrap}
-.runner .cheat{font-size:12px;color:var(--ink-2);padding:0 18px 14px;line-height:1.9}
-.runner .cheat code{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
-.runner .row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.runner-pad{padding:14px 18px}
+.runner textarea{min-height:300px}
+.runner .out{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+  font:12.5px/1.7 var(--mono);color:var(--ink);min-height:80px;max-height:320px;overflow:auto;
+  word-break:break-all;white-space:pre-wrap;margin:8px 0 0}
+.runner .row{display:flex;gap:8px;align-items:center;margin:10px 0}
+/* 关卡输出 iframe(隔离 phpinfo 等自带样式的输出) */
+.lab-out-frame{width:100%;border:1px solid var(--line);border-radius:10px;min-height:72px;background:#fff}

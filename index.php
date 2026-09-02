@@ -21,7 +21,7 @@ $LAB_LEVELS = $LAB_CONFIG['levels'];
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="index.php"><img src="assets/img/logo.svg" alt="logo">探姬 · HelloCTF</a>
+    <a class="brand" href="index.php"><img src="assets/img/logo.svg" alt="logo">HelloCTF</a>
     <span class="crumb"><?php echo htmlspecialchars($LAB_SITE['title']); ?></span>
     <span class="sp"></span>
     <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>
