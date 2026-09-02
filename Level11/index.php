@@ -3,7 +3,6 @@
 --- HelloCTF - 反序列化靶场 关卡 11 : __wakeup() Bypass ---
 CVE-2016-7124 · PHP5 < 5.6.25 / PHP7 < 7.0.10
 序列化字符串中属性个数大于真实属性个数时会跳过 __wakeup 的执行
-(页面底部的 phpinfo() 用于确认当前环境版本,判断该 CVE 是否适用)
 © ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs
 */
 

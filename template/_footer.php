@@ -58,7 +58,7 @@ $LAB_PAYLOAD = array(
 
     <div class="panel" data-panel="src" <?php echo $LAB_ACTIVE === 'src' ? '' : 'hidden'; ?>>
       <div class="codehead">
-        <span>黄色行为关键代码</span><span class="sp"></span>
+        <span class="sp"></span>
         <button class="iconbtn" onclick="labCopy(this,'lab-raw-src')">复制当前源码</button>
       </div>
       <div id="lab-source-panel">

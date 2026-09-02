@@ -197,7 +197,7 @@
 
   var RUNNER_HTML =
     '<div class="card runner" id="labRunner">' +
-    '  <header><b>PHP Code Runner</b><span style="font-size:12px;color:var(--ink-3)">完整的 PHP 运行环境(与靶场同版本)</span><span class="sp"></span>' +
+    '  <header><b>PHP Code Runner</b><span class="sp"></span>' +
     '    <button class="iconbtn" data-runner-sample="1">示例</button><button class="iconbtn" data-runner-close="1">✕</button></header>' +
     '  <div class="runner-pad">' +
     '    <textarea id="runnerIn" spellcheck="false"></textarea>' +

