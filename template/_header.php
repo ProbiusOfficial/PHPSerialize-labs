@@ -1,4 +1,5 @@
 <?php
+ob_start(); /* 顶层缓冲:保证 session_start 等仍可发送头部 */
 /*
 PHPSerialize-labs 统一关卡模板 · 页头
 © ProbiusOfficial(@hello-ctf.com) · github.com/ProbiusOfficial/PHPSerialize-labs

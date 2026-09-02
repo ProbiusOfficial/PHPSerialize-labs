@@ -154,4 +154,4 @@ var LAB_PAGE = <?php echo json_encode($LAB_PAYLOAD, JSON_UNESCAPED_UNICODE | JSO
 </script>
 <script src="../assets/js/lab.js"></script>
 </body>
-</html>
+</html><?php while (ob_get_level() > 0) { ob_end_flush(); }
