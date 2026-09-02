@@ -1,5 +1,8 @@
-FROM php:5.4-apache
+FROM php:5.5-apache
 COPY . /var/www/html
-RUN sed -i 's/Options FollowSymLinks/Options +FollowSymLinks +Indexes/g' /etc/apache2/apache2.conf
-RUN echo '<IfModule mime_module>\nAddDefaultCharset UTF-8\n</IfModule>' > /etc/apache2/conf-enabled/default-charset.conf
+
+# 目录列表与字符集(独立 conf 片段,兼容不同版本 Apache 布局)
+RUN printf '<Directory /var/www/html>\n    Options +FollowSymLinks +Indexes\n</Directory>\n' > /etc/apache2/conf-enabled/lab-dir.conf \
+    && printf 'AddDefaultCharset UTF-8\n' > /etc/apache2/conf-enabled/lab-charset.conf
+
 EXPOSE 80
