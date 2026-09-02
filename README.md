@@ -49,17 +49,11 @@ Docker Compose:
 
 ## PHP 版本说明
 
-<<<<<<< HEAD
-默认使用 php:5.4-apache。Level 11 考察 CVE-2016-7124,该漏洞仅影响 PHP 5.6.25 / 7.0.10 之前的版本,因此 main 分支固定使用该镜像,请勿在此分支更换高版本镜像,否则 Level 11 无法按预期解题。
+本分支使用 php:8.2-apache。main 分支默认使用 php:5.5-apache:复现 Level 11 的 CVE-2016-7124(仅影响 PHP 5.6.25 / 7.0.10 之前的版本),并支持 Level 22 所需的 php_serialize 处理器(PHP 5.5.4 引入)。
 
-如需在现代 PHP 环境部署或二次开发,切换到 [php8 分支](https://github.com/ProbiusOfficial/PHPSerialize-labs/tree/php8)(php:8.2-apache,语法已完成适配):
+本分支上 Level 11 与 Level 23 不再成立:前者是 CVE 已在新版修复,后者是 PHP 8 起文件函数不再触发 phar metadata 自动反序列化。两关仅作新旧行为对照,其余关卡解题方式与 main 分支一致。
 
-    git checkout php8
-
-注意:php8 分支上 Level 11 的绕过手法不再生效,仅作为新旧版本行为对照,其余关卡解题方式一致。
-=======
-本分支使用 php:8.2-apache。main 分支默认使用 php:5.4-apache,用于复现 Level 11 的 CVE-2016-7124(该漏洞仅影响 PHP 5.6.25 / 7.0.10 之前的版本);在本分支上该绕过手法不再生效,Level 11 仅作为新旧版本行为对照,其余关卡的解题方式与 main 分支一致。
->>>>>>> d8866f6 (feat(php8): 切换基础镜像为 php:8.2-apache,适配 PHP 8)
+切回 main 教学基准:git checkout main (docs(php8): 说明 Level 11/23 在 PHP 8 上的行为差异)
 
 ## 相关链接
 

@@ -28,3 +28,10 @@ $phar->addFromString('readme.txt', 'helloctf');
 $phar->stopBuffering();
 ```
 
+
+## PHP 8 行为差异
+
+在 PHP 8.x 上实测(8.2):`file_exists` / `is_dir` / `filesize` 等文件函数触碰
+`phar://` 流**不再触发** metadata 反序列化;即使显式 `new Phar(...)` 后调用
+`getMetadata()`,metadata 对象可以还原,但其析构函数不会被调用。
+因此本关的利用路径仅成立于 PHP 8 之前的版本(main 分支默认的 php:5.4 环境)。
