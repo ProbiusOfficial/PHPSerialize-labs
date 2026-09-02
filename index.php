@@ -21,7 +21,7 @@ $LAB_LEVELS = $LAB_CONFIG['levels'];
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="index.php"><img src="assets/img/logo.svg" alt="logo">HelloCTF</a>
+    <a class="brand" href="index.php"><img src="assets/img/logo.svg" alt="logo">Serialize-labs</a>
     <span class="crumb"><?php echo htmlspecialchars($LAB_SITE['title']); ?></span>
     <span class="sp"></span>
     <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>
@@ -38,7 +38,7 @@ $LAB_LEVELS = $LAB_CONFIG['levels'];
     <div class="how">
       <div><b>① 答题方式</b>每关「作答」页有输入框,直接提交;也支持 curl / HackBar。</div>
       <div><b>② 卡住了?</b>先看「提示」(逐条展开);引导关讲得细,挑战关只给一条。</div>
-      <div><b>③ 真不会?</b>「解析」页有思路和 EXP;「⌨ 运行器」帮你本地构造 payload,无需安装 PHP。</div>
+      <div><b>③ 真不会?</b>「解析」页有思路和 EXP;「⌨ 运行器」快速构造与验证 payload。</div>
     </div>
     <div class="progline">
       <span id="progText">已完成 0 / <?php echo $LAB_SITE['total']; ?></span>

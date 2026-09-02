@@ -6,7 +6,7 @@ PHPSerialize-labs 是一个使用 PHP 语言编写的,用于学习 CTF 中 PHP �
 
 - **引导关 + 挑战关双模式**:多数关卡逐步引导,少数关卡(POPC 链、CVE、真题)只给最少提示;
 - **页面即答题**:每个关卡页内置作答表单、curl 命令与 HackBar 指引,无需自己搭请求环境;
-- **内置 PHP 序列化运行器**:浏览器里写类定义直接生成 serialize payload,无需安装 PHP;
+- **内置 PHP Code Runner**:与靶场同版本的完整 PHP 运行环境,快速构造与验证 payload;
 - **渐进式提示 + 防剧透解析**:提示逐条展开,WriteUP 二次确认后可达。
 
 > 本仓库 main 分支为全新 UI 版;**原始版本完整保留在 [old 分支](https://github.com/ProbiusOfficial/PHPSerialize-labs/tree/old)**(含完整 WriteUP 于 README)。

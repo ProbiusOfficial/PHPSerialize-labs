@@ -21,7 +21,7 @@ $EXERCISES = [
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">HelloCTF</a>
+    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">Serialize-labs</a>
     <span class="crumb">进阶练习 · 真题实战</span>
     <span class="sp"></span>
     <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>

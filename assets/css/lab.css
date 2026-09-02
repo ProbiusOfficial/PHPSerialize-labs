@@ -167,6 +167,14 @@ textarea:focus{outline:2px solid var(--accent-weak);border-color:var(--accent)}
 .wp pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
   padding:12px 14px;overflow:auto;font:12.5px/1.7 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-all}
 .wp .more{display:inline-block;margin-top:8px;font-size:13.5px}
+.wp-md{font-size:14px;color:var(--ink-2);line-height:1.75}
+.wp-md h3,.wp-md h4,.wp-md h5{color:var(--ink);margin:16px 0 6px}
+.wp-md code{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font:12.5px var(--mono);color:var(--ink)}
+.wp-md pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow:auto;font:12.5px/1.7 var(--mono);color:var(--ink);white-space:pre-wrap;word-break:break-all}
+.wp-md pre code{border:none;background:none;padding:0}
+.wp-md blockquote{margin:8px 0;padding:6px 14px;border-left:3px solid var(--accent);background:var(--accent-weak);border-radius:0 8px 8px 0}
+.wp-md ul{margin:6px 0;padding-left:22px}
+.wp-md hr{border:none;border-top:1px dashed var(--line);margin:14px 0}
 
 /* Code Runner 弹层 */
 .runner-mask{position:fixed;inset:0;background:rgba(10,12,20,.55);z-index:50;display:none}

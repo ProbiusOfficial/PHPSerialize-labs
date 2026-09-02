@@ -36,7 +36,7 @@ if (!defined('LAB_TEMPLATE')) {
 
 <div class="topbar">
   <div class="wrap">
-    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">HelloCTF</a>
+    <a class="brand" href="../index.php"><img src="../assets/img/logo.svg" alt="logo">Serialize-labs</a>
     <span class="crumb"><b><?php echo 'Level ' . $LEVEL_NO . ' / ' . $LAB_TOTAL; ?></b> · <?php echo htmlspecialchars($M ? $M['title'] : ''); ?></span>
     <span class="sp"></span>
     <button class="iconbtn" data-runner-open="1">⌨ 运行器</button>

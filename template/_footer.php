@@ -30,6 +30,11 @@ if ($M && isset($M['sources'])) {
     }
 }
 
+/* 完整题解(writeups/LevelN.md) */
+$LAB_WP_MD = '';
+$LAB_WP_FILE = $LAB_ROOT . '/writeups/Level' . $LEVEL_NO . '.md';
+if (is_file($LAB_WP_FILE)) { $LAB_WP_MD = file_get_contents($LAB_WP_FILE); }
+
 /* Code Runner 路径(页面所在目录的上一级) */
 $LAB_DIRNAME = str_replace('\\', '/', dirname(isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '/'));
 $LAB_RUNNER = ($LAB_DIRNAME === '' || $LAB_DIRNAME === '/' || $LAB_DIRNAME === '.') ? '/runner.php' : $LAB_DIRNAME . '/../runner.php';
@@ -127,8 +132,12 @@ $LAB_PAYLOAD = array(
       <div class="wp" hidden>
         <h4>思路</h4>
         <p><?php echo $M['wp']['idea']; ?></p>
-        <?php if ($M['wp']['exp']) { ?><h4>EXP(exp.php 参考代码)</h4><pre><?php echo htmlspecialchars($M['wp']['exp']); ?></pre>
+        <?php if ($M['wp']['exp']) { ?><h4>EXP(exp.php 参考代码,可一键载入运行器)</h4><pre><?php echo htmlspecialchars($M['wp']['exp']); ?></pre>
         <button class="btn ghost" data-wp-load="1" style="margin-top:8px">⌨ 一键载入运行器</button><?php } ?>
+        <?php if ($LAB_WP_MD !== '') { require $LAB_ROOT . '/template/_markdown.php'; ?>
+        <h4>完整解析</h4>
+        <div class="wp-md"><?php echo lab_markdown($LAB_WP_MD); ?></div>
+        <?php } ?>
         <a class="more" href="../writeups/Level<?php echo $LEVEL_NO; ?>.md" target="_blank">查看完整 WriteUP ↗</a>
       </div>
       <?php } ?>
