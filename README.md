@@ -2,7 +2,7 @@
 
 hello-ctf.com 基础靶场计划之一。使用 PHP 编写的 CTF 反序列化引导靶场,内容覆盖面向对象基础、序列化格式、魔术方法、POP 链、字符串逃逸、session 与 phar 反序列化、原生类利用。
 
-原始版本完整保留在 [old 分支](https://github.com/ProbiusOfficial/PHPSerialize-labs/tree/old),包含旧版页面与原 README 中的完整 WriteUP。
+原始版本完整保留在本仓库的 [main 分支](https://github.com/ProbiusOfficial/PHPSerialize-labs/tree/main)。
 
 ## 关卡
 
