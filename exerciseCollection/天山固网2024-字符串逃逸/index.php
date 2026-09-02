@@ -58,9 +58,8 @@ Class D1{
 
     public function __toString()
     {
-        // TODO: Implement __toString() method.
         call_user_func($this->test1,$this->test2);
-
+        return '';
     }
 }
 $a = $_POST["a"];

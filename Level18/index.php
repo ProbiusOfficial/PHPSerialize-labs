@@ -23,8 +23,8 @@ echo "SerliseStringDemo:'".$serliseStringDemo."'<br>";
 
 echo "Change SOMETHING TO GET FLAG";
 
-$target = $_GET['target'];
-$change = $_GET['change'];
+$target = isset($_GET['target']) ? $_GET['target'] : '';
+$change = isset($_GET['change']) ? $_GET['change'] : '';
 
 $serliseStringFLAG = str_replace($target, $change, $serliseStringDemo);
 
