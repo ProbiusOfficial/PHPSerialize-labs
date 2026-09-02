@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    PHPSerialize-labs logo
+    序列化字符串的 { } 括号 + 中心的 payload 圆点
+    © ProbiusOfficial / hello-ctf.com
+  -->
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f6ef7"/>
+      <stop offset="1" stop-color="#19c3a9"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="url(#lg)"/>
+  <path d="M25 15c-5.5 0-8 2.5-8 7.5v5c0 3.4-1.8 4.5-5.5 4.5 3.7 0 5.5 1.1 5.5 4.5v5c0 5 2.5 7.5 8 7.5"
+        fill="none" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+  <path d="M39 15c5.5 0 8 2.5 8 7.5v5c0 3.4 1.8 4.5 5.5 4.5-3.7 0-5.5 1.1-5.5 4.5v5c0 5-2.5 7.5-8 7.5"
+        fill="none" stroke="#ffffff" stroke-width="4.6" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="4" fill="#ffffff"/>
+</svg>
