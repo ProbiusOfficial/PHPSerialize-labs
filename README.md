@@ -49,7 +49,13 @@ Docker Compose:
 
 ## PHP 版本说明
 
-Level 11 考察 CVE-2016-7124,该漏洞仅影响 PHP 5.6.25 / 7.0.10 之前的版本,因此镜像固定为 php:5.4-apache,请勿更换为高版本镜像,否则该关无法按预期解题。
+默认使用 php:5.4-apache。Level 11 考察 CVE-2016-7124,该漏洞仅影响 PHP 5.6.25 / 7.0.10 之前的版本,因此 main 分支固定使用该镜像,请勿在此分支更换高版本镜像,否则 Level 11 无法按预期解题。
+
+如需在现代 PHP 环境部署或二次开发,切换到 [php8 分支](https://github.com/ProbiusOfficial/PHPSerialize-labs/tree/php8)(php:8.2-apache,语法已完成适配):
+
+    git checkout php8
+
+注意:php8 分支上 Level 11 的绕过手法不再生效,仅作为新旧版本行为对照,其余关卡解题方式一致。
 
 ## 相关链接
 
